@@ -1,0 +1,95 @@
+const ctrl = require('../controllers/user.controller');
+// const ctrlLogin = require('../controllers/login.controller');
+
+// const sql = require('mssql');
+// const config = require('../config/webconfig');
+const util = require('util');
+const cripto = require('../util/crypto.util');
+const jwt = require('jsonwebtoken');
+
+module.exports = function(app) {
+    app.get('/',function(req,res){
+        return res.json({
+            success: false,
+            message: 'Failed to authenticate token.'
+        });
+    });
+    app.get('/api/user/upload', ctrl.UploadImg);
+    // recovery account 
+    // app.post('/api/user/recovery', ctrlLogin.RecoveryPWD);
+    // create new user
+    app.post('/api/user', ctrl.Create);
+    //  get token authenticate 
+    app.post('/api/authenticate', function(req, res) {
+        //let crypto_ = require('../util/crypto.util');
+        let pwd = req.body.pwd;
+        pwd = cripto.encrypt(pwd);
+        // let context = sql;
+        // let sQuery = util.format("SELECT [ID],[EMAIL],[PWD] FROM [dbo].[USERS] where [EMAIL]= '%s'", req.body.email);
+        // context.connect(config).then(pool => {
+        //     return (pool.request().query(sQuery));
+        // }).then(result => {
+        //     context.close();
+        //     if (result.recordset.length > 0) {
+        //         let tmp = cripto.descrypt(result.recordset[0].PWD);
+        //         if (result.recordset[0].PWD == pwd) {
+        //             let user = {
+        //                 Email: req.body.email,
+        //                 Pwd: pwd
+        //             };
+        //             let token = jwt.sign(user, app.get('superSecret'), {
+        //                 expiresIn: '504h'
+        //             });
+
+        //             res.json({
+        //                 sucess: true,
+        //                 message: 'Enjoy your token',
+        //                 token: token
+        //             });
+        //             //resolve(res);
+        //         }
+
+        //     } else {
+        //         res.writeHead(400, {
+        //             'Content-Type': 'text/html'
+        //         });
+        //         res.write('No there rows ');
+        //         res.end();
+        //         resolve(res);
+        //     }
+        // });
+    });
+
+    app.use('/api', function(req, res, next) {
+        // check header or url parameters or post parameters for token
+        let token = req.body.token || req.query.token || req.headers['x-access-token'];
+        // decode token
+        if (token) {
+            // verifies secret and checks exp
+            jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+                if (err) {
+                    return res.json({
+                        success: false,
+                        message: 'Failed to authenticate token.'
+                    });
+                } else {
+                    // if everything is good, save to request for use in other routes
+                    req.decoded = decoded;
+                    next();
+                }
+            });
+            //console.log('test');
+        } else {
+            // if there is no token
+            // return an error
+            return res.status(403).send({
+                success: false,
+                message: 'No token provided.'
+            });
+        }
+    });
+
+    app.put('/api/user/:id', ctrl.Update)
+    app.get('/api/user/:id', ctrl.GetById);
+    app.get('/api/user', ctrl.GetAll);
+}
