@@ -29,7 +29,7 @@ module.exports = {
         });
     },
     asynGetByID: function (objuser) {
-        console.dir(objuser);
+        // console.dir(objuser);
         return new Promise(function (resolve, reject) {
             try {
                 const query = usermodel.find({ "_id": objuser._id });
@@ -40,8 +40,9 @@ module.exports = {
                     docs.length >= 1 ? resolve(docs[0]._doc) : resolve(0);
                 });
             } catch (error) {
+                console.log('AQUI HAY UN ERROR' + error);
                 reject(error);
             }
-        })
+        });
     }
 }

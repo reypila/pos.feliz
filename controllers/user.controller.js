@@ -12,6 +12,17 @@ const responseutil = require('../util/response.util');
 
 // => users
 module.exports = {
+    GetById: function (req, res, next) {
+        const objUser = { "_id": req.params._id };
+        usermodel.asynGetByID(objUser).then(x => {
+            if (x <= 1) {
+                responseutil.Send(res, 400, 'No existe usuario', '', '', '');
+            } else {
+                responseutil.Send(res, 200, x, '', '', '');
+            }
+            next();
+        });
+    },
     Create: function (req, res) {
         if (!req.body.email || !req.body.password || !validator.isEmail(req.body.email)) {
             let tmp = '* Email y Contraseña es requerido ';
@@ -78,17 +89,6 @@ module.exports = {
 
             });
         }
-    },
-    GetById: function (req, res, next) {
-        const objUser = { "_id": req.params._id };
-        usermodel.asynGetByID(objUser).then(x => {
-            if (x <= 1) {
-                responseutil.Send(res, 400, 'No existe usuario', '', '', '');
-            } else {
-                responseutil.Send(res, 200, x, '', '', '');
-            }
-            next();
-        });
     },
     GetAll: function (req, res, next) {
         //usermodel.asyncGetAll(req, res, next);
