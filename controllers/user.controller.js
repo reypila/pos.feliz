@@ -13,8 +13,9 @@ const responseutil = require('../util/response.util');
 // => users
 module.exports = {
     GetById: function (req, res, next) {
-        const objUser = { "_id": req.params._id };
+        const objUser = { "_id": req.params.id };
         usermodel.asynGetByID(objUser).then(x => {
+            console.dir(x);
             if (x <= 1) {
                 responseutil.Send(res, 400, 'No existe usuario', '', '', '');
             } else {
@@ -42,9 +43,6 @@ module.exports = {
                 }
 
                 if (docs.length >= 1) {
-                    // exist user\
-                    let indice = docs[0]._doc._id;
-                    // res.status(400).send('Usuario ya existe');
                     responseutil.Send(res, 400, '', false, 'Usuario ya existe', '', '');
                 } else {
                     let user = userEntity({
