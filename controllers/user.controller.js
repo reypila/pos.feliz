@@ -73,14 +73,9 @@ module.exports = {
                             // responseutil.Send(res,400,'',false,'Usuario ya existe','','');
                             return err;
                         } else {
-                            let promise = new Promise(function (resolve, reject) {
-                                email.init(req.body.email);
-                            }).then(x => {
-                                // responseutil.Send(res, 400, '', false, 'Usuario ya existe', '', '');
-                                // responseutil.Send(res, 200)
-                                res.status(200).send(JSON.stringify(user));
-                            });
-
+                            email.init(req.body.email);
+                            console.log('end email process');
+                            responseutil.Send(res, 200, JSON.stringify(user), 'OK', '', '');
                         }
                     });
                 }

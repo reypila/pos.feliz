@@ -57,8 +57,8 @@ module.exports =
                 }
             }
 
-            //return [optionA,optionB,optionC];
-            return [optionC, optionB, optionA];
+            return [optionC];
+            // return [optionC, optionB, optionA];
 
         }
     }

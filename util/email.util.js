@@ -14,25 +14,18 @@ module.exports = {
         // body
         //var vbody = _dataraw.body();
         var vbody = _dataraw.body2(objReceiver);
-        console.log(vbody);
-        vbody = vbody [Math.floor(Math.random() * vbody.length)];
-        console.log("--------------------------------------------------------------------------------------------------------------------");
-        
-        console.log(vbody);
-
+        // console.log(vbody);
+        vbody = vbody[Math.floor(Math.random() * vbody.length)];
         // Email sender
         var vsender = _dataraw.senderconfig();
         vsender = vsender[Math.floor(Math.random() * vsender.length)];
-
-
-        console.log(vsender.auth.user);
 
         var transporter = nodemailer.createTransport(
             smtpTransport(vsender)
         );
 
         transporter.sendMail({
-            to: objReceiver.EmailOrigin,
+            to: objReceiver,
             from: vsender.auth.user,
             subject: vsubject,
             html: vbody

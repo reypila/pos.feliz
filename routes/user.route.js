@@ -13,18 +13,18 @@ module.exports = function(app) {
     
     app.get('/api/user/:id', ctrl.GetById);
     
-    app.get('/api/user/upload', ctrl.UploadImg);
+    // app.get('/api/user/upload', ctrl.UploadImg);
     // recovery account 
     // app.post('/api/user/recovery', ctrlLogin.RecoveryPWD);
     // create new user
     app.post('/api/user', ctrl.Create);
     //  get token authenticate 
-    app.post('/api/authenticate', function(req, res) {
-        //let crypto_ = require('../util/crypto.util');
-        let pwd = req.body.pwd;
-        pwd = cripto.encrypt(pwd);
+    // app.post('/api/authenticate', function(req, res) {
+    //     //let crypto_ = require('../util/crypto.util');
+    //     let pwd = req.body.pwd;
+    //     pwd = cripto.encrypt(pwd);
   
-    });
+    // });
 
     // app.use('/api', function(req, res, next) {
     //     // check header or url parameters or post parameters for token
@@ -55,6 +55,6 @@ module.exports = function(app) {
     //     }
     // });
 
-    app.put('/api/user/:id', ctrl.Update)
-    app.get('/api/user', ctrl.GetAll);
+    // app.put('/api/user/:id', ctrl.Update)
+    // app.get('/api/user', ctrl.GetAll);
 }
