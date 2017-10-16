@@ -5,10 +5,11 @@ const validator = require('validator');
 const usermodel = require('../models/users.model');
 const crypto = require('../util/crypto.util');
 const userEntity = require('../entitys/user.entity');
-// const users_catalogdetails = require('../models/catalogdetails.model');
 const enums = require('../util/enum.util');
 const email = require('../util/email.util');
 const responseutil = require('../util/response.util');
+const jwt = require('jsonwebtoken');
+const SuperSecret = require('../config/SuperSecret');
 
 // => users
 module.exports = {
@@ -115,6 +116,33 @@ module.exports = {
 
         // usermodel.asyncUploadImgDropbox();
         //usermodel.asynUploadImg();
+    },
+    CheckExist: function (req, res, next) {
+        let pwd = req.body.password;
+        pwd = crypto.encrypt(pwd);
+
+        const objuser = { "email": req.body.email, "password": pwd };
+
+        usermodel.asyncCheckExist(objuser).then(x => {
+            if (x == enums.STATUS_ITEM.OK) {
+                let token = jwt.sign(objuser,SuperSecret.NIP,{
+                    expiresIn:'360h'
+                });
+                res.json({
+                    sucess: true,
+                    message: 'Enjoy your token',
+                    token: token
+                });
+                next(res);
+            }else{
+                res.writeHead(400,{
+                    'Content-Type':'text/html'
+                });
+                res.write('Verificar usuario y contrasena');
+                res.end();
+                next(res);
+            }
+        })
     }
 
 

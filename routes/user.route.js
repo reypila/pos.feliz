@@ -3,27 +3,31 @@ const util = require('util');
 const cripto = require('../util/crypto.util');
 const jwt = require('jsonwebtoken');
 
-module.exports = function(app) {
-    app.get('/',function(req,res){
+module.exports = function (app) {
+    app.get('/', function (req, res) {
         return res.json({
             success: true,
             message: 'Quiuboles.'
         });
     });
-    
+
     app.get('/api/user/:id', ctrl.GetById);
-    
+
     // app.get('/api/user/upload', ctrl.UploadImg);
     // recovery account 
     // app.post('/api/user/recovery', ctrlLogin.RecoveryPWD);
     // create new user
     app.post('/api/user', ctrl.Create);
     //  get token authenticate 
-    // app.post('/api/authenticate', function(req, res) {
+    app.post('/api/authenticate', ctrl.CheckExist);
+    // app.post('/api/authenticate', function (req, res) {
+
     //     //let crypto_ = require('../util/crypto.util');
     //     let pwd = req.body.pwd;
     //     pwd = cripto.encrypt(pwd);
-  
+
+    //     const objuser = { "email": req.body.email, "password": pwd };
+
     // });
 
     // app.use('/api', function(req, res, next) {
