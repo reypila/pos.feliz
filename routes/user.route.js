@@ -2,6 +2,7 @@ const ctrl = require('../controllers/user.controller');
 const util = require('util');
 const cripto = require('../util/crypto.util');
 const jwt = require('jsonwebtoken');
+const SuperSecret = require('../config/SuperSecret');
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
@@ -11,7 +12,6 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/api/user/:id', ctrl.GetById);
 
     // app.get('/api/user/upload', ctrl.UploadImg);
     // recovery account 
@@ -30,35 +30,37 @@ module.exports = function (app) {
 
     // });
 
-    // app.use('/api', function(req, res, next) {
-    //     // check header or url parameters or post parameters for token
-    //     let token = req.body.token || req.query.token || req.headers['x-access-token'];
-    //     // decode token
-    //     if (token) {
-    //         // verifies secret and checks exp
-    //         jwt.verify(token, app.get('superSecret'), function(err, decoded) {
-    //             if (err) {
-    //                 return res.json({
-    //                     success: false,
-    //                     message: 'Failed to authenticate token.'
-    //                 });
-    //             } else {
-    //                 // if everything is good, save to request for use in other routes
-    //                 req.decoded = decoded;
-    //                 next();
-    //             }
-    //         });
-    //         //console.log('test');
-    //     } else {
-    //         // if there is no token
-    //         // return an error
-    //         return res.status(403).send({
-    //             success: false,
-    //             message: 'No token provided.'
-    //         });
-    //     }
-    // });
+    app.use('/api', function(req, res, next) {
+        // check header or url parameters or post parameters for token
+        let token = req.body.token || req.query.token || req.headers['x-access-token'];
+        // decode token
+        if (token) {
+            // verifies secret and checks exp
+            jwt.verify(token, SuperSecret.NIP, function(err, decoded) {
+                if (err) {
+                    return res.json({
+                        success: false,
+                        message: 'Failed to authenticate token.'
+                    });
+                } else {
+                    // if everything is good, save to request for use in other routes
+                    req.decoded = decoded;
+                    next();
+                }
+            });
+            //console.log('test');
+        } else {
+            // if there is no token
+            // return an error
+            return res.status(403).send({
+                success: false,
+                message: 'No token provided.'
+            });
+        }
+    });
 
-    // app.put('/api/user/:id', ctrl.Update)
+    app.get('/api/user/:id', ctrl.GetById);
+    
+    app.put('/api/user/:id', ctrl.Update)
     // app.get('/api/user', ctrl.GetAll);
 }
