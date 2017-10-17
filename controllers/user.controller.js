@@ -14,7 +14,7 @@ const SuperSecret = require('../config/SuperSecret');
 // => users
 module.exports = {
     GetById: function (req, res, next) {
-        const objUser = { "_id": req.params.id };
+        const objUser = { '_id': req.params.id };
         usermodel.asynGetByID(objUser).then(x => {
             console.dir(x);
             if (x <= 1) {
@@ -29,7 +29,7 @@ module.exports = {
         if (!req.body.email || !req.body.password || !validator.isEmail(req.body.email)) {
             let tmp = '* Email y Contraseña es requerido ';
             res.writeHead(400, {
-                "Content-Type": "text/html; charset=utf-8"
+                'Content-Type': 'text/html; charset=utf-8'
             });
             res.write('<html><head><title>400</title><body>400: Bad Request</body> <br/> ' + tmp + '</head>');
             res.end();
@@ -88,29 +88,36 @@ module.exports = {
         //usermodel.asyncGetAll(req, res, next);
     },
     Update: function (req, res, next) {
-        // let iduser = req.params.id;
-        // if (iduser) {
-        //     // start
-        //     let objUser = {
-        //         "ID": iduser,
-        //         "NAME": req.body.name,
-        //         "LASTNAME": req.body.lastname,
-        //         "ALTERNATEMAIL": req.body.alternatemail,
-        //         "BIRTHDAY": req.body.birthday,
-        //         "RFC": req.body.rfc,
-        //         "CURP": req.body.curp,
-        //         "GENRE": req.body.genre,
-        //         "ZIPCODE": req.body.zipcode,
-        //         "HOME_REFERENCE": req.body.home_reference,
-        //         "APARTMENT_NUMBER": req.body.apartment_number,
-        //         "TELEPHONE_NUMBER": req.body.telephone_number,
-        //         "TELEPHONE_NUMBER2": req.body.telephone_number2
-        //     };
-        //     // end
-        //     usermodel.asyncSet(req, res, next, objUser);
-        // } else {
-        //     res.status(400).send('id user required');
-        // }
+        let id = req.params.id;
+        if (id) {
+            // start
+            let objUser = {
+                '_id': id,
+                'status_item': req.body.status_item,
+                'maker': req.body.maker,
+                'modification_date': new Date(),
+                'password': req.body.password,
+                'name': req.body.name,
+                'lastname': req.body.lastname,
+                'lastname2': req.body.lastname,
+                'alternatemail': req.body.alternatemail,
+                'birthday': req.body.birthday,
+                'rfc': req.body.rfc,
+                'curp': req.body.curp,
+                'genre': req.body.genre,
+                'zipcode': req.body.zipcode,
+                'home_reference': req.body.home_reference,
+                'apartment_number': req.body.apartment_number,
+                'telephone_number': req.body.telephone_number,
+                'telephone_number2': req.body.telephone_number2
+            };
+            // end
+            usermodel.asyncSet(objUser).then(x => {
+                console.dir(x);
+            });
+        } else {
+            res.status(400).send('id user required');
+        }
     },
     UploadImg: function (req, res, next) {
 
@@ -121,12 +128,12 @@ module.exports = {
         let pwd = req.body.password;
         pwd = crypto.encrypt(pwd);
 
-        const objuser = { "email": req.body.email, "password": pwd };
+        const objuser = { 'email': req.body.email, 'password': pwd };
 
         usermodel.asyncCheckExist(objuser).then(x => {
             if (x == enums.STATUS_ITEM.OK) {
-                let token = jwt.sign(objuser,SuperSecret.NIP,{
-                    expiresIn:'360h'
+                let token = jwt.sign(objuser, SuperSecret.NIP, {
+                    expiresIn: '360h'
                 });
                 res.json({
                     sucess: true,
@@ -134,9 +141,9 @@ module.exports = {
                     token: token
                 });
                 next(res);
-            }else{
-                res.writeHead(400,{
-                    'Content-Type':'text/html'
+            } else {
+                res.writeHead(400, {
+                    'Content-Type': 'text/html'
                 });
                 res.write('Verificar usuario y contrasena');
                 res.end();
