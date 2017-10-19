@@ -101,7 +101,7 @@ module.exports = {
                 'lastname': req.body.lastname,
                 'lastname2': req.body.lastname,
                 'alternatemail': req.body.alternatemail,
-                'birthday': req.body.birthday,
+                'birthday': new Date(),
                 'rfc': req.body.rfc,
                 'curp': req.body.curp,
                 'genre': req.body.genre,

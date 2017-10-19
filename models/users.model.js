@@ -50,29 +50,29 @@ module.exports = {
             try {
                 let query = usermodel.findOneAndUpdate(
                     {
-                        '_id': objuser.id
+                        '_id': objuser._id
                     }, {
-                        'status_item': req.body.status_item,
-                        'maker': req.body.maker,
+                        'status_item': objuser.status_item,
+                        'maker': objuser.maker,
                         'modification_date': new Date(),
-                        'password': req.body.password,
-                        'name': req.body.name,
-                        'lastname': req.body.lastname,
-                        'lastname2': req.body.lastname,
-                        'alternatemail': req.body.alternatemail,
-                        'birthday': req.body.birthday,
-                        'rfc': req.body.rfc,
-                        'curp': req.body.curp,
-                        'genre': req.body.genre,
-                        'zipcode': req.body.zipcode,
-                        'home_reference': req.body.home_reference,
-                        'apartment_number': req.body.apartment_number,
-                        'telephone_number': req.body.telephone_number,
-                        'telephone_number2': req.body.telephone_number2
+                        'password': objuser.password,
+                        'name': objuser.name,
+                        'lastname': objuser.lastname,
+                        'lastname2': objuser.lastname,
+                        'alternatemail': objuser.alternatemail,
+                        'birthday': objuser.birthday,
+                        'rfc': objuser.rfc,
+                        'curp': objuser.curp,
+                        'genre': objuser.genre,
+                        'zipcode': objuser.zipcode,
+                        'home_reference': objuser.home_reference,
+                        'apartment_number': objuser.apartment_number,
+                        'telephone_number': objuser.telephone_number,
+                        'telephone_number2': objuser.telephone_number2
                     }, function (err, res) {
                         if (err) return err;
                         if (res == null) {
-                            throw Error(res);
+                            // throw Error(res);
                             resolve(0);
                         } else {
                             resolve(res._doc);
