@@ -20,16 +20,7 @@ module.exports = function (app) {
     app.post('/api/user', ctrl.Create);
     //  get token authenticate 
     app.post('/api/authenticate', ctrl.CheckExist);
-    // app.post('/api/authenticate', function (req, res) {
-
-    //     //let crypto_ = require('../util/crypto.util');
-    //     let pwd = req.body.pwd;
-    //     pwd = cripto.encrypt(pwd);
-
-    //     const objuser = { "email": req.body.email, "password": pwd };
-
-    // });
-
+    // authenticate path
     app.use('/api', function(req, res, next) {
         // check header or url parameters or post parameters for token
         let token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -43,22 +34,18 @@ module.exports = function (app) {
                         message: 'Failed to authenticate token.'
                     });
                 } else {
-                    // if everything is good, save to request for use in other routes
                     req.decoded = decoded;
                     next();
                 }
             });
-            //console.log('test');
         } else {
-            // if there is no token
-            // return an error
             return res.status(403).send({
                 success: false,
                 message: 'No token provided.'
             });
         }
     });
-
+    // get user by id 
     app.get('/api/user/:id', ctrl.GetById);
     
     app.put('/api/user/:id', ctrl.Update)

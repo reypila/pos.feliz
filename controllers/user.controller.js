@@ -88,10 +88,10 @@ module.exports = {
         //usermodel.asyncGetAll(req, res, next);
     },
     Update: function (req, res, next) {
-        let id = req.params.id;
+        const id = req.params.id;
         if (id) {
             // start
-            let objUser = {
+            const objUser = {
                 '_id': id,
                 'status_item': req.body.status_item,
                 'maker': req.body.maker,
@@ -101,10 +101,10 @@ module.exports = {
                 'lastname': req.body.lastname,
                 'lastname2': req.body.lastname,
                 'alternatemail': req.body.alternatemail,
-                'birthday': new Date(),
+                'birthday': req.body.birthday,
                 'rfc': req.body.rfc,
                 'curp': req.body.curp,
-                'genre': req.body.genre,
+                'genre': req.body.genre == enums.GENRE.FEMALE || req.body.genre == enums.GENRE.MALE ? req.body.genre : enums.GENRE.NEUTRAL,
                 'zipcode': req.body.zipcode,
                 'home_reference': req.body.home_reference,
                 'apartment_number': req.body.apartment_number,
@@ -113,7 +113,11 @@ module.exports = {
             };
             // end
             usermodel.asyncSet(objUser).then(x => {
-                console.dir(x);
+                if(x == enums.STATUS_ITEM.OK){
+                    responseutil.Send(res, 200, JSON.stringify(objUser), 'OK', '', '');
+                }else{
+                    responseutil.Send(res, 400, '', 'Error', '', '');
+                }
             });
         } else {
             res.status(400).send('id user required');

@@ -71,11 +71,10 @@ module.exports = {
                         'telephone_number2': objuser.telephone_number2
                     }, function (err, res) {
                         if (err) return err;
-                        if (res == null) {
-                            // throw Error(res);
-                            resolve(0);
+                        if (res == null || typeof(res._doc) == 'undefined') {
+                            resolve(enums.STATUS_ITEM.INCIDENCIA);
                         } else {
-                            resolve(res._doc);
+                            resolve(enums.STATUS_ITEM.OK);
                         }
                     });
             } catch (ex) {

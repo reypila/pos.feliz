@@ -6,9 +6,10 @@ const app = express();
 const SuperSecret = require('./config/SuperSecret');
 const configdb = require('./config/mongoose');
 
-// 8084
-app.set('port', (process.env.PORT || 8084));
-// app.set('port', (process.env.PORT || 5000));
+// development 8084
+// app.set('port', (process.env.PORT || 8084));
+// production 5000
+app.set('port', (process.env.PORT || 5000));
 // app.set('superSecret', SuperSecret.NIP);
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
