@@ -14,16 +14,11 @@ let objProduct = new Schema({
     barcode: String,
     weight: String,
     size: String,
-    birthday: Date,
-    rfc: String,
-    curp: String,
-    genre: Number,
-    zipcode: String,
-    home_reference: String,
-    apartment_number: String,
-    telephone_number: String,
-    telephone_number2: String
+    stock:  { type: Number, required: true },
+    id_cost: { type: Number, required: true },
+    location: String,
+    id_measurement_unit: { type: Number, required: true },
    });
 
-let User = mongoose.model('users', objUser);
-module.exports = User;
+const Product = mongoose.model('product', objUser);
+module.exports = Product;

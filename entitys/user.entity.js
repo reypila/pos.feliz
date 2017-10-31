@@ -24,5 +24,5 @@ let objUser = new Schema({
     telephone_number2: String
    });
 
-let User = mongoose.model('users', objUser);
+const User = mongoose.model('user', objUser);
 module.exports = User;

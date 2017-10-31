@@ -44,5 +44,5 @@ let objCatalogdetails = new Schema({
     field15: String
 });
 
-let catalogdetails = mongoose.model('catalogdetails', objCatalogdetails);
+let catalogdetails = mongoose.model('catalogdetail', objCatalogdetails);
 module.exports = catalogdetails;
