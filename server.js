@@ -17,6 +17,12 @@ app.use(bodyParser.json());
 // Routes
 // routes = require('./routes/category.route')(app);
 routes = require('./routes/user.route')(app);
+routes = require('./routes/category.route')(app);
+routes = require('./routes/category.route')(app);
+routes = require('./routes/category.route')(app);
+routes = require('./routes/category.route')(app);
+
+
 
 mongoose.disconnect();
 mongoose.connect(configdb.url, { useMongoClient: true, reconnectTries: Number.MAX_VALUE }).then(x => {
