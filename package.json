@@ -28,6 +28,6 @@
     "nodemailer": "^4.1.0",
     "nodemailer-smtp-transport": "^2.7.4",
     "promise": "^8.0.1",
-    "validator": "^8.2.0"
+    "validator": "^9.4.1"
   }
 }
