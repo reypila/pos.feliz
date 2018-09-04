@@ -4,6 +4,22 @@ const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
+    asyncGetAll: function(){
+        return new Promise(function (resolve, reject) {
+            try {
+                const query = usermodel.find({});
+                query.exec(function (err, docs) {
+                    if (err) {
+                        resolve(-1);
+                    }
+                    docs.length >= 1 ? resolve(docs) : resolve(0);
+                });
+            } catch (error) {
+                console.log('AQUI HAY UN ERROR' + error);
+                reject(error);
+            }
+        });
+    },
     asyncCheckExist: function (objuser) {
         return new Promise(function (resolve, reject) {
             try {

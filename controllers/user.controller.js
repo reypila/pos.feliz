@@ -39,7 +39,7 @@ module.exports = {
             // let tmppwd = crypto.encrypt(req.body.password);
             let tmppwd = req.body.password;
             let query = userEntity.find({ email: req.body.email });
-            console.dir(query );
+           
             query.exec(function (err, docs) {
                 if (err) {
                     console.log('error' + err);
@@ -47,9 +47,10 @@ module.exports = {
                 }
 
                 if (docs.length >= 1) {
+                   // console.dir(query );
                     responseutil.Send(res, 400, '', false, 'Usuario ya existe', '', '');
                 } else {
-                    
+                    console.dir('hello');
                     let datetmp = enums.DateTimeNowToMilliSeconds();
 
                     let user = userEntity({
@@ -75,13 +76,14 @@ module.exports = {
                         apartment_number_ext: '',
                         telephone_number: '',
                         telephone_number2: '',
-                        rol_id: '',
+                        rol_id: 'NA',
                     });
 
                     user.save(function (err) {
                         if (err) {
                             // responseutil.Send(res,400,'',false,'Usuario ya existe','','');
-                            return err;
+                            responseutil.Send(res, 400, '', err.message, '', '', '');
+                            // return err;
                         } else {
                             // email.init(req.body.email);
                             console.log('end email process');
@@ -94,7 +96,9 @@ module.exports = {
         }
     },
     GetAll: function (req, res, next) {
-        //usermodel.asyncGetAll(req, res, next);
+       var t =  usermodel.asyncGetAll(req, res, next).then(x => {
+            responseutil.Send(res, 200, JSON.stringify(x), '', '', '');
+        });
     },
     Update: function (req, res, next) {
         const id = req.params.id;
