@@ -7,7 +7,8 @@ const STATUS_ITEM = {
     "DELETE": -1,
     "ACTIVO": 100,
     "INACTIVO": -100,
-    "INCIDENCIA": -1
+    "INCIDENCIA": -1,
+    "PENDIENTE":2,
 }
 
 const RESOURCES = {
@@ -28,5 +29,10 @@ const GENRE = {
     "FEMALE": 2
 }
 
+const DateTimeNowToMilliSeconds =  function(){
+        var d = new Date();
+        var n = d.getTime();
+        return n;
+}
 
-module.exports = { STATUS_ITEM, STATUS_ITEM2, RESOURCES, CATALOGS, GENRE };
+module.exports = { DateTimeNowToMilliSeconds, STATUS_ITEM, STATUS_ITEM2, RESOURCES, CATALOGS, GENRE };

@@ -3,7 +3,7 @@
  */
 const _dataraw = require('../Config/DataRAW');
 const nodemailer = require('nodemailer');
-const smtpTransport = require('nodemailer-smtp-transport');
+// const smtpTransport = require('');
 
 module.exports = {
     init: function (objReceiver) {
@@ -21,7 +21,7 @@ module.exports = {
         vsender = vsender[Math.floor(Math.random() * vsender.length)];
 
         var transporter = nodemailer.createTransport(
-            smtpTransport(vsender)
+            // smtpTransport(vsender)
         );
 
         transporter.sendMail({

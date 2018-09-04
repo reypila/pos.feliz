@@ -26,6 +26,8 @@ module.exports = {
         });
     },
     Create: function (req, res) {
+        // console.dir(req.body);
+
         if (!req.body.email || !req.body.password || !validator.isEmail(req.body.email)) {
             let tmp = '* Email y Contraseña es requerido ';
             res.writeHead(400, {
@@ -34,9 +36,10 @@ module.exports = {
             res.write('<html><head><title>400</title><body>400: Bad Request</body> <br/> ' + tmp + '</head>');
             res.end();
         } else {
-            let tmppwd = crypto.encrypt(req.body.password);
+            // let tmppwd = crypto.encrypt(req.body.password);
+            let tmppwd = req.body.password;
             let query = userEntity.find({ email: req.body.email });
-
+            console.dir(query );
             query.exec(function (err, docs) {
                 if (err) {
                     console.log('error' + err);
@@ -46,27 +49,33 @@ module.exports = {
                 if (docs.length >= 1) {
                     responseutil.Send(res, 400, '', false, 'Usuario ya existe', '', '');
                 } else {
+                    
+                    let datetmp = enums.DateTimeNowToMilliSeconds();
+
                     let user = userEntity({
-                        id_item: 0,
-                        status_item: enums.STATUS_ITEM.ACTIVO,
+                        item_order: 0,
+                        status_item_id: enums.STATUS_ITEM.PENDIENTE,
                         maker: req.body.email,
-                        create_date: new Date(),
-                        modification_date: new Date(),
+                        create_date: datetmp,
+                        modification_date: datetmp,
                         email: req.body.email,
                         password: tmppwd,
                         name: '',
                         lastname: '',
                         lastname2: '',
                         alternatemail: '',
-                        birthday: new Date(),
+                        birthday: 0,
                         rfc: '',
                         curp: '',
                         genre: 0,
                         zipcode: '',
                         home_reference: '',
-                        apartment_number: '',
+                        address: '',
+                        apartment_number_int: '',
+                        apartment_number_ext: '',
                         telephone_number: '',
-                        telephone_number2: ''
+                        telephone_number2: '',
+                        rol_id: '',
                     });
 
                     user.save(function (err) {
@@ -74,7 +83,7 @@ module.exports = {
                             // responseutil.Send(res,400,'',false,'Usuario ya existe','','');
                             return err;
                         } else {
-                            email.init(req.body.email);
+                            // email.init(req.body.email);
                             console.log('end email process');
                             responseutil.Send(res, 200, JSON.stringify(user), 'OK', '', '');
                         }

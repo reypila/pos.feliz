@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let objUser = new Schema({
-    id_item: { type: Number, require: true },
-    status_item: { type: Number, require: true },
+    item_order: { type: Number, require: true },
+    status_item_id: { type: Number, require: true },
     maker: { type: String, required: true },
-    create_date: { type: Date, required: true },
-    modification_date: { type: Date, required: true }, 
-    email: { type: String, required: true, unique: true },
+    create_date: { type: Number, required: true },
+    modification_date: { type: Number, required: true }, 
+    email: { type: String, required: false, unique: true },
     password: { type: String, required: true },
     name: String,
     lastname: String,
@@ -16,13 +16,16 @@ let objUser = new Schema({
     birthday: Date,
     rfc: String,
     curp: String,
-    genre: Number,
+    genre_id: Number,
     zipcode: String,
     home_reference: String,
-    apartment_number: String,
+    address: String,
+    apartment_number_int: String,
+    apartment_number_ext: String,
     telephone_number: String,
-    telephone_number2: String
+    telephone_number2: String,
+    rol_id: { type: String, required: true }
    });
 
-const User = mongoose.model('user', objUser);
+const User = mongoose.model('users', objUser);
 module.exports = User;
