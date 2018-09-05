@@ -20,26 +20,48 @@ module.exports = {
         var vsender = _dataraw.senderconfig();
         vsender = vsender[Math.floor(Math.random() * vsender.length)];
 
-        var transporter = nodemailer.createTransport(
-            // smtpTransport(vsender)
-        );
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true, // use SSL
+            auth: {
+                  user: 'eblaher@gmail.com',
+                  pass: 'JQuery0170'
+                }
+        });
 
-        transporter.sendMail({
-            to: objReceiver,
+        let mailOptions = {
+            to: 'iblanquel@gmail.com',
             from: vsender.auth.user,
             subject: vsubject,
             html: vbody
+        };
 
-
-        }, function (error) {
+        transporter.sendMail(mailOptions,(error,info) => {
             if (error) {
-                console.log('Se ha creado un ' + error);
-                //callback(error);
-            } else {
-                console.log('Message sent');
-                //console.log('Message sent', 'response.response');
-            }
+            return console.log(error);
+        }
+        console.log('Message sent: %s', info.messageId);
+        // Preview only available when sending through an Ethereal account
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
         });
+
+        // transporter.sendMail({
+        //     to: objReceiver,
+        //     from: vsender.auth.user,
+        //     subject: vsubject,
+        //     html: vbody
+
+
+        // }, function (error) {
+        //     if (error) {
+        //         console.log('Se ha creado un ' + error);
+        //         //callback(error);
+        //     } else {
+        //         console.log('Message sent');
+        //         //console.log('Message sent', 'response.response');
+        //     }
+        // });
 
         return objReceiver.EmailOrigin;
     }

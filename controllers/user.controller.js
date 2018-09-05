@@ -85,8 +85,8 @@ module.exports = {
                             responseutil.Send(res, 400, '', err.message, '', '', '');
                             // return err;
                         } else {
-                            // email.init(req.body.email);
-                            console.log('end email process');
+                            email.init(req.body.email);
+                           // console.log('end email process');
                             responseutil.Send(res, 200, JSON.stringify(user), 'OK', '', '');
                         }
                     });

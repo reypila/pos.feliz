@@ -20,7 +20,7 @@ module.exports = {
             }
         });
     },
-    asyncCheckExist: function (objuser) {
+    asyncCheckExist: function(objuser) {
         return new Promise(function (resolve, reject) {
             try {
                 let query = usermodel.findOne({

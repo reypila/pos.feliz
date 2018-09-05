@@ -15,7 +15,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // Routes
+ routes = require('./routes/catalog.route')(app);
  routes = require('./routes/user.route')(app);
+
 // routes = require('./routes/category.route')(app);
 
 // routes = require('./routes/category.route')(app);
