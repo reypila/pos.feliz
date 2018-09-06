@@ -12,14 +12,17 @@ const CATALOGS = {
 
 const STATUS_ITEM = {
     "recoveryPwd": 10,
-    "OK": 1,
+    "OK": 200,
+    "OKNOCONTENT": 204,
     "DELETE": -1,
     "ACTIVO": 100,
     "INACTIVO": -100,
     "INCIDENCIA": -1,
     "PENDIENTE": 2,
     "EXISTE": 1,
-    "ERROR": -100
+    "ERROR": 500, // Internal Server Error
+    "NOTFOUND": 404 ,
+    "BADREQUEST": 404 
 }
 
 const RESOURCES = {

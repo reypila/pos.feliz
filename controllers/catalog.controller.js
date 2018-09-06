@@ -4,16 +4,62 @@ const responseutil = require('../util/response.util');
 const modelCatalog = require('../models/catalogs.model');
 
 module.exports = {
-  GetAll: function (req, res, next) {
+  Update: function function_name(req, res, next) {
+
+    // validate body object
+    if (!req.body.id || !req.body.status_item || !req.body.table_name || !req.body.row_order) {
+      responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required property not set id, status_item, table_name or row_order', '', '', '');
+      next();
+    }
+
+    // fill Catalog object
+    const requestObject = {
+      id: req.params.id,
+      status_item: req.params.status_item,
+      table_name: req.params.table_name,
+      row_order: req.params.row_order
+    };
+
+    modelCatalog.asyncPatch(requestObject).then(resolve => {
+      if (resolve.statusCode == enums.STATUS_ITEM.ERROR) {
+        responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', resolve.message, '', '', '');
+      } else {
+        responseutil.Send(res, enums.STATUS_ITEM.OK, resolve, '', '');
+      }
+    },reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+      next();
+    });
+  },
+  Get: function(req, res, next) {
+
+    const objcatalogdetails = {
+      id: req.params.id
+    };
+    modelCatalog.asynGet(objcatalogdetails).then(result => {
+      if (result.statusCode == enums.STATUS_ITEM.ERROR) {
+        responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', x.message, '', '', '');
+      } else {
+        // console.dir(result);
+        responseutil.Send(res, enums.STATUS_ITEM.OK, result, '', '');
+      }
+      next();
+    }, reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+    });
+  },
+  GetAll: function(req, res, next) {
     modelCatalog.asyncGetAll().then(x => {
       if (x.statusCode == enums.STATUS_ITEM.ERROR) {
         responseutil.Send(res, 400, '', x.message, '', '', '');
       }
       responseutil.Send(res, 200, x, '', '', '', '');
 
+    }, reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
     });
   },
-  Create: function (req, res, next) {
+  Create: function(req, res, next) {
 
     if (!req.body.table_name) {
       responseutil.Send(res, 400, '', 'table_name is necesary', '', '', '');
@@ -33,32 +79,12 @@ module.exports = {
         responseutil.Send(res, 200, result, '', '', '', '');
         next();
       }
+    }, reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
     });
   }
 
-  // GetById: function(req, res, next) {
-  //   const objcatalogdetails = {
-  //     uid: req.params.id
-  //   };
 
-  //   model.asyncFindById(objcatalogdetails).then(result => {
-  //     if (result == 0) {
-  //       responseutil.Send(res, 400, '', 'no se encontro ninguna cateroria con ese nombre', '')
-  //     } else {
-  //       let category = {
-  //         _id: result._id,
-  //         id: result.row,
-  //         name: result.field0,
-  //         status_item: result.status_item,
-  //         maker: result.maker,
-  //         create_date: result.create_date,
-  //         modification_date: result.modification_date
-  //       }
-  //       responseutil.Send(res, 200, category, '', '');
-  //     }
-  //     next();
-  //   });
-  // },
   // Delete: function(req, res, next) {
   //   let objCatalogDetails = {
   //     _id: req.body._id,

@@ -4,38 +4,117 @@ const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
-	asyncGetAll: function () {
-		let promesa = new Promise(function (resolve, reject) {
+	asyncPatch: function(catalogObj) {
+		const promesa = new Promise(function(resolve, reject) {
 			try {
-				const query = catalogEntity.find({});
-				query.exec(function (err, docs) {
-					if (err) {
-						reject({ statusCode: enums.STATUS_ITEM.ERROR, message: err });
+				const datetmp = enums.DateTimeNowToMilliSeconds();
+				let query = catalogEntity.findOneAndUpdate({
+					'_id': catalogObj.id
+				}, {
+					'status_item': catalogObj.status_item,
+					'modification_date': datetmp,
+					'table_name': catalogObj.table_name,
+					'row_order': catalogObj.row_order
+				}, function(error, res) {
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
 					}
-					docs.length >= 1 ? resolve(docs) : resolve(0);
+
+					if (res == null || typeof(res._doc) == 'undefined') {
+						resolve(enums.STATUS_ITEM.INCIDENCIA);
+					} else {
+						resolve({
+							statusCode: enums.STATUS_ITEM.OKNOCONTENT,
+							message: ''
+						});
+					}
 				});
 			} catch (error) {
-				// console.log('AQUI HAY UN ERROR' + error);
-				// 	resolve({statusCode:enums.STATUS_ITEM.ERROR, message: err });
-				reject(enums.STATUS_ITEM.ERROR);
+				if (error) {
+					reject({
+						statusCode: enums.STATUS_ITEM.ERROR,
+						message: error.message
+					});
+				}
 			}
 		});
 		return promesa;
 	},
-	asyncCreate: function (catalogObj) {
-		let promesa = new Promise(function (resolve, reject) {
+	asynGet: function(catalogObj) {
+		let promesa = new Promise(function(resolve, reject) {
+			try {
+
+				const query = catalogEntity.find({
+					'_id': catalogObj.id
+				});
+
+				query.exec(function(error, docs) {
+					if (error) {
+						// console.log('query.exec');
+						//console.dir(error);
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
+					}
+
+					// console.dir(docs);
+					docs.length >= 1 ? resolve(docs) : resolve(enums.STATUS_ITEM.NOTFOUND);
+				});
+			} catch (error) {
+
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+
+			}
+		});
+
+		return promesa;
+	},
+	asyncGetAll: function() {
+		let promesa = new Promise(function(resolve, reject) {
+			try {
+				const query = catalogEntity.find({});
+				query.exec(function(error, docs) {
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
+					}
+					docs.length >= 1 ? resolve(docs) : resolve(0);
+				});
+			} catch (error) {
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+			}
+		});
+
+		return promesa;
+	},
+	asyncCreate: function(catalogObj) {
+		let promesa = new Promise(function(resolve, reject) {
 			try {
 
 				const query = catalogEntity.find({
 					'table_name': catalogObj.table_name
 				});
 
-
-				query.exec(function (err, docs) {
+				query.exec(function(err, docs) {
 					let tmprow = 0;
 
-					if (err) {
-						resolve(-1);
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
 					}
 
 					if (docs.length >= 1) {
@@ -47,7 +126,7 @@ module.exports = {
 							status_item: true
 						}).sort('-id_table');
 
-						querygetmax.exec(function (err, docgetmax) {
+						querygetmax.exec(function(err, docgetmax) {
 							if (err) {
 								resolve(-1);
 							}
@@ -63,7 +142,7 @@ module.exports = {
 								row_order: tmprow
 							});
 
-							catalog.save(function (err) {
+							catalog.save(function(err) {
 
 								if (err) {
 									resolve({
@@ -80,36 +159,21 @@ module.exports = {
 				});
 
 			} catch (error) {
-				// console.dir(error);
-				console.log('AQUI HAY UN ERROR' + error);
-				reject(error);
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
 			}
 		});
 		return promesa;
 	}
-	//	,
-	//	asyncGetAll: function() {
-	//		return new Promise(function(resolve, reject) {
-	//			try {
-	//				const query = usermodel.find({});
-	//				query.exec(function(err, docs) {
-	//					if (err) {
-	//						resolve(-1);
-	//					}
-	//					docs.length >= 1 ? resolve(docs) : resolve(0);
-	//				});
-	//			} catch (error) {
-	//				console.log('AQUI HAY UN ERROR' + error);
-	//				reject(error);
-	//			}
-	//		});
-	//	},
-	//	asyncCheckExist: function(objuser) {
+
+	//	asyncCheckExist: function(catalogObj) {
 	//		return new Promise(function(resolve, reject) {
 	//			try {
 	//				let query = usermodel.findOne({
-	//					'email': objuser.email,
-	//					'password': objuser.password
+	//					'email': catalogObj.email,
+	//					'password': catalogObj.password
 	//				}, '_id id_item', function(err, res) {
 	//					if (err) return err;
 	//
@@ -128,59 +192,6 @@ module.exports = {
 	//			}
 	//		});
 	//	},
-	//	asynGetByID: function(objuser) {
-	//		// console.dir(objuser);
-	//		return new Promise(function(resolve, reject) {
-	//			try {
-	//				const query = usermodel.find({
-	//					'_id': objuser._id
-	//				});
-	//				query.exec(function(err, docs) {
-	//					if (err) {
-	//						resolve(-1);
-	//					}
-	//					docs.length >= 1 ? resolve(docs[0]._doc) : resolve(0);
-	//				});
-	//			} catch (error) {
-	//				console.log('AQUI HAY UN ERROR' + error);
-	//				reject(error);
-	//			}
-	//		});
-	//	},
-	//	asyncSet: function(objuser) {
-	//		return new Promise(function(resolve, reject) {
-	//			try {
-	//				let query = usermodel.findOneAndUpdate({
-	//					'_id': objuser._id
-	//				}, {
-	//					'status_item': objuser.status_item,
-	//					'maker': objuser.maker,
-	//					'modification_date': new Date(),
-	//					'password': objuser.password,
-	//					'name': objuser.name,
-	//					'lastname': objuser.lastname,
-	//					'lastname2': objuser.lastname,
-	//					'alternatemail': objuser.alternatemail,
-	//					'birthday': objuser.birthday,
-	//					'rfc': objuser.rfc,
-	//					'curp': objuser.curp,
-	//					'genre': objuser.genre,
-	//					'zipcode': objuser.zipcode,
-	//					'home_reference': objuser.home_reference,
-	//					'apartment_number': objuser.apartment_number,
-	//					'telephone_number': objuser.telephone_number,
-	//					'telephone_number2': objuser.telephone_number2
-	//				}, function(err, res) {
-	//					if (err) return err;
-	//					if (res == null || typeof(res._doc) == 'undefined') {
-	//						resolve(enums.STATUS_ITEM.INCIDENCIA);
-	//					} else {
-	//						resolve(enums.STATUS_ITEM.OK);
-	//					}
-	//				});
-	//			} catch (ex) {
-	//				reject(ex);
-	//			}
-	//		});
-	//	}
+
+
 }
