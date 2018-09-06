@@ -4,9 +4,26 @@ const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
-
-	asyncCreate: function(catalogObj) {
-		let promesa = new Promise(function(resolve, reject) {
+	asyncGetAll: function () {
+		let promesa = new Promise(function (resolve, reject) {
+			try {
+				const query = catalogEntity.find({});
+				query.exec(function (err, docs) {
+					if (err) {
+						reject({ statusCode: enums.STATUS_ITEM.ERROR, message: err });
+					}
+					docs.length >= 1 ? resolve(docs) : resolve(0);
+				});
+			} catch (error) {
+				// console.log('AQUI HAY UN ERROR' + error);
+				// 	resolve({statusCode:enums.STATUS_ITEM.ERROR, message: err });
+				reject(enums.STATUS_ITEM.ERROR);
+			}
+		});
+		return promesa;
+	},
+	asyncCreate: function (catalogObj) {
+		let promesa = new Promise(function (resolve, reject) {
 			try {
 
 				const query = catalogEntity.find({
@@ -14,7 +31,7 @@ module.exports = {
 				});
 
 
-				query.exec(function(err, docs) {
+				query.exec(function (err, docs) {
 					let tmprow = 0;
 
 					if (err) {
@@ -30,7 +47,7 @@ module.exports = {
 							status_item: true
 						}).sort('-id_table');
 
-						querygetmax.exec(function(err, docgetmax) {
+						querygetmax.exec(function (err, docgetmax) {
 							if (err) {
 								resolve(-1);
 							}
@@ -46,7 +63,7 @@ module.exports = {
 								row_order: tmprow
 							});
 
-							catalog.save(function(err) {
+							catalog.save(function (err) {
 
 								if (err) {
 									resolve({

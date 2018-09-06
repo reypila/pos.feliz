@@ -18,7 +18,8 @@ const STATUS_ITEM = {
     "INACTIVO": -100,
     "INCIDENCIA": -1,
     "PENDIENTE": 2,
-    "EXISTE": 1
+    "EXISTE": 1,
+    "ERROR": -100
 }
 
 const RESOURCES = {

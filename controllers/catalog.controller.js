@@ -4,12 +4,22 @@ const responseutil = require('../util/response.util');
 const modelCatalog = require('../models/catalogs.model');
 
 module.exports = {
-  Create: function(req, res, next) {
+  GetAll: function (req, res, next) {
+    modelCatalog.asyncGetAll().then(x => {
+      if (x.statusCode == enums.STATUS_ITEM.ERROR) {
+        responseutil.Send(res, 400, '', x.message, '', '', '');
+      }
+      responseutil.Send(res, 200, x, '', '', '', '');
+
+    });
+  },
+  Create: function (req, res, next) {
 
     if (!req.body.table_name) {
       responseutil.Send(res, 400, '', 'table_name is necesary', '', '', '');
     }
     const tmp_table_name = req.body.table_name.toUpperCase();
+
     let catalogObj = {
       table_name: tmp_table_name
     };
