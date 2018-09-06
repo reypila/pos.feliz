@@ -14,13 +14,9 @@ let objCatalogdetails = new Schema({
         type: Number,
         required: true
     },
-    id_table: {
-        type: Number,
-        required: true
-    },
-    table_name: {
-        type: String,
-        required: true
+    catalogs: {
+        type: Schema.Types.ObjectId,
+        ref: 'catalogs'
     },
     row: {
         type: Number,
@@ -49,5 +45,5 @@ let objCatalogdetails = new Schema({
     column20: String,
 });
 
-let catalogdetails = mongoose.model('catalogs', objCatalogdetails);
+let catalogdetails = mongoose.model('catalogsdetails', objCatalogdetails);
 module.exports = catalogdetails;

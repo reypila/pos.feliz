@@ -5,30 +5,13 @@ const modelCatalog = require('../models/catalogs.model');
 
 module.exports = {
   Create: function(req, res, next) {
+
+    if (!req.body.table_name) {
+      responseutil.Send(res, 400, '', 'table_name is necesary', '', '', '');
+    }
+    const tmp_table_name = req.body.table_name.toUpperCase();
     let catalogObj = {
-      column0: req.body.column0,
-      column1: req.body.column1,
-      column2: req.body.column2,
-      column3: req.body.column3,
-      column4: req.body.column4,
-      column5: req.body.column5,
-      column6: req.body.column6,
-      column7: req.body.column7,
-      column8: req.body.column8,
-      column9: req.body.column9,
-      column10: req.body.column10,
-      column11: req.body.column11,
-      column12: req.body.column12,
-      column13: req.body.column13,
-      column14: req.body.column14,
-      column15: req.body.column15,
-      column16: req.body.column16,
-      column17: req.body.column17,
-      column18: req.body.column18,
-      column19: req.body.column19,
-      column20: req.body.column20,
-      table_name: req.body.table_name,
-      option: req.body.option
+      table_name: tmp_table_name
     };
 
     modelCatalog.asyncCreate(catalogObj).then(result => {

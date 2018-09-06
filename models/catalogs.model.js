@@ -1,4 +1,4 @@
-const catalogEntity = require('../entitys/catalogs.entity');
+const catalogEntity = require('../entities/catalogs.entity');
 const enums = require('../util/enum.util');
 const responseutil = require('../util/response.util')
 const Promise = require('promise');
@@ -7,16 +7,11 @@ module.exports = {
 
 	asyncCreate: function(catalogObj) {
 		let promesa = new Promise(function(resolve, reject) {
-			// body...
 			try {
-				// console.dir(catalogObj);
-
-				// if option is table get max value row plus one 
 
 				const query = catalogEntity.find({
 					'table_name': catalogObj.table_name
 				});
-
 
 
 				query.exec(function(err, docs) {
@@ -26,62 +21,43 @@ module.exports = {
 						resolve(-1);
 					}
 
-					// if (catalogObj.option == enums.CATALOGS.TABLA_OPTION) {
-					// 		tmprow = parseInt(docs.row) + 1;
-					// 	}
-
-					if (docs.length >= 1 && catalogObj.option == enums.CATALOGS.TABLA_OPTION) {
+					if (docs.length >= 1) {
 						resolve(enums.STATUS_ITEM.EXISTE);
-					}
+					} else {
 
-					if (docs.length >= 1 && catalogObj.option == enums.CATALOGS.ROW_OPTION) {
-						
-						const datetmp = enums.DateTimeNowToMilliSeconds();
-						tmprow = parseInt(docs.row) + 1;
+						// get max value id_table
+						const querygetmax = catalogEntity.findOne({
+							status_item: true
+						}).sort('-id_table');
 
-						let catalog = catalogEntity({
-							status_item: true,
-							create_date: datetmp,
-							modification_date: 0,
-							id_table: 0, // buscar como obtener maximo
-							table_name: catalogObj.table_name,
-							row: tmprow,
-							column0: catalogObj.column0,
-							column1: catalogObj.column1,
-							column2: catalogObj.column2,
-							column3: catalogObj.column3,
-							column4: catalogObj.column4,
-							column5: catalogObj.column5,
-							column6: catalogObj.column6,
-							column7: catalogObj.column7,
-							column8: catalogObj.column8,
-							column9: catalogObj.column9,
-							column10: catalogObj.column10,
-							column11: catalogObj.column11,
-							column12: catalogObj.column12,
-							column13: catalogObj.column13,
-							column14: catalogObj.column14,
-							column15: catalogObj.column15,
-							column16: catalogObj.column16,
-							column17: catalogObj.column17,
-							column18: catalogObj.column18,
-							column19: catalogObj.column19,
-							column20: catalogObj.column20
-						});
-
-						catalog.save(function(err) {
-
+						querygetmax.exec(function(err, docgetmax) {
 							if (err) {
-								resolve({
-									statusCode: 400,
-									message: err.message
-								});
-								// responseutil.Send(res, 400, '', err.message, '', '', '');
-							} else {
-								//responseutil.Send(res, 200, JSON.stringify(catalog), '', '', '');
-								resolve(JSON.stringify(catalog, null));
+								resolve(-1);
 							}
-						});
+							tmprow = parseInt(docgetmax.id_table) + 1;
+							const datetmp = enums.DateTimeNowToMilliSeconds();
+
+							let catalog = catalogEntity({
+								status_item: true,
+								create_date: datetmp,
+								modification_date: 0,
+								id_table: tmprow, // buscar como obtener maximo
+								table_name: catalogObj.table_name,
+								row_order: tmprow
+							});
+
+							catalog.save(function(err) {
+
+								if (err) {
+									resolve({
+										statusCode: 400,
+										message: err.message
+									});
+								} else {
+									resolve(JSON.stringify(catalog, null));
+								}
+							});
+						})
 					}
 					// ? resolve(docs[0]._doc) : resolve(0);
 				});

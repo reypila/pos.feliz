@@ -1,4 +1,4 @@
-const usermodel = require('../entitys/user.entity');
+const usermodel = require('../entities/user.entity');
 const enums = require('../util/enum.util');
 const responseutil = require('../util/response.util')
 const Promise = require('promise');
