@@ -45,6 +45,11 @@ const DateTimeNowToMilliSeconds = function() {
     return n;
 }
 
+const ValidateUndefined = function function_name(argument) {
+    // body...
+
+}
+
 module.exports = {
     DateTimeNowToMilliSeconds,
     STATUS_ITEM,

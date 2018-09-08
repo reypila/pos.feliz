@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const SuperSecret = require('../config/SuperSecret');
 
 module.exports = function (app) {    
+    // app.put('/api/users/:id', ctrl.Update);
     app.get('/api/users', ctrl.GetAll);
 	app.post('/api/users', ctrl.Create);
 

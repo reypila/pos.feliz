@@ -3,21 +3,28 @@ const Promise = require("promise");
 const responseutil = require('../util/response.util');
 const modelCatalog = require('../models/catalogs.model');
 
-module.exports = {
-  Update: function function_name(req, res, next) {
 
-    // validate body object
-    if (!req.body.id || !req.body.status_item || !req.body.table_name || !req.body.row_order) {
+module.exports = {
+  Patch: function function_name(req, res, next) {
+
+    if (typeof req.params.id == 'undefined' ||
+      typeof req.body.status_item == 'undefined')
+    // ||
+    // !req.body.status_item ||
+    // !req.body.table_name ||
+    // !req.body.row_order
+    {
+
       responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required property not set id, status_item, table_name or row_order', '', '', '');
-      next();
+      // next();
     }
 
     // fill Catalog object
     const requestObject = {
       id: req.params.id,
-      status_item: req.params.status_item,
-      table_name: req.params.table_name,
-      row_order: req.params.row_order
+      status_item: req.body.status_item,
+      table_name: req.body.table_name,
+      row_order: req.body.row_order
     };
 
     modelCatalog.asyncPatch(requestObject).then(resolve => {
@@ -26,13 +33,14 @@ module.exports = {
       } else {
         responseutil.Send(res, enums.STATUS_ITEM.OK, resolve, '', '');
       }
-    },reject => {
+    }, reject => {
       responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
       next();
     });
+    // }
   },
   Get: function(req, res, next) {
-
+    //
     const objcatalogdetails = {
       id: req.params.id
     };
