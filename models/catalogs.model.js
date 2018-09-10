@@ -1,67 +1,158 @@
 const catalogEntity = require('../entities/catalogs.entity');
 const rowsEntity = require('../entities/catalogdetails.entity');
-
 const enums = require('../util/enum.util');
 const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
-	asyncDataAdd: function(requestObject){
-		const promesa = new Promise(function (resolve,reject) {
+	asynDataPatch: function(requestObject) {
+		const promesa = new Promise(function(resolve, reject) {
+			try {
+				
+				const datetmp = enums.DateTimeNowToMilliSeconds();
+				let query = rowsEntity.findOneAndUpdate({
+					'_id': requestObject.id
+				}, {
+					status_item: requestObject.status_item,
+					modification_date: datetmp,
+					row_order: requestObject.row_order,
+					column0: requestObject.column0,
+					column1: requestObject.column1,
+					column2: requestObject.column2,
+					column3: requestObject.column3,
+					column4: requestObject.column4,
+					column5: requestObject.column5,
+					column6: requestObject.column6,
+					column7: requestObject.column7,
+					column8: requestObject.column8,
+					column9: requestObject.column9,
+					column10: requestObject.column10,
+					column11: requestObject.column11,
+					column12: requestObject.column12,
+					column13: requestObject.column13,
+					column14: requestObject.column14,
+					column15: requestObject.column15,
+					column16: requestObject.column16,
+					column17: requestObject.column17,
+					column18: requestObject.column18,
+					column19: requestObject.column19,
+					column20: requestObject.column20
+				}, function(error, res) {
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
+					}
+					
+
+					if (!enums.CheckExist(res._doc)) {
+						resolve(enums.STATUS_ITEM.INCIDENCIA);
+					} else {
+						resolve({
+							statusCode: enums.STATUS_ITEM.OKNOCONTENT,
+							message: JSON.stringify(res)
+						});
+					}
+				});
+			} catch (error) {
+
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+
+			}
+		});
+
+		return promesa;
+	},
+	asynDataGet: function(requestObject) {
+		const promesa = new Promise(function(resolve, reject) {
+			try {
+
+				const query = rowsEntity.find({
+					'_id': requestObject.id
+				});
+
+				query.exec(function(error, docs) {
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
+					}
+					docs.length >= 1 ? resolve(docs) : resolve(enums.STATUS_ITEM.NOTFOUND);
+				});
+
+			} catch (error) {
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+			}
+		});
+
+		return promesa;
+	},
+	asyncDataAdd: function(requestObject) {
+		const promesa = new Promise(function(resolve, reject) {
 			// body...
 			try {
 				// console.dir(requestObject);
 				// const datetmp = enums.DateTimeNowToMilliSeconds();
 				const datetmp = enums.DateTimeNowToMilliSeconds();
 
-							let rowitem = rowsEntity({
-								status_item: true,
-								create_date: datetmp,
-								modification_date: 0,
-								catalogsid: requestObject.catalogsid, // buscar como obtener maximo
-								//table_name: catalogObj.table_name,
-								row_order: requestObject.row_order,
-								colum0 : requestObject.colum0 ,
-								colum1 : requestObject.colum1 ,
-								colum2 : requestObject.colum2 ,
-								colum3 : requestObject.colum3 ,
-								colum4 : requestObject.colum4 ,
-								colum5 : requestObject.colum5 ,
-								colum6 : requestObject.colum6 ,
-								colum7 : requestObject.colum7 ,
-								colum8 : requestObject.colum8 ,
-								colum9 : requestObject.colum9 ,
-								colum10 : requestObject.colum10 ,
-								colum11 : requestObject.colum11 ,
-								colum12 : requestObject.colum12 ,
-								colum13 : requestObject.colum13 ,
-								colum14 : requestObject.colum14 ,
-								colum15 : requestObject.colum15 ,
-								colum16 : requestObject.colum16 ,
-								colum17 : requestObject.colum17 ,
-								colum18 : requestObject.colum18 ,
-								colum19 : requestObject.colum19 ,
-								colum20 : requestObject.colum20 
-							});
+				let rowitem = rowsEntity({
+					status_item: true,
+					create_date: datetmp,
+					modification_date: 0,
+					catalogsid: requestObject.catalogsid, // buscar como obtener maximo
+					//table_name: catalogObj.table_name,
+					row_order: requestObject.row_order,
+					column0: requestObject.column0,
+					column1: requestObject.column1,
+					column2: requestObject.column2,
+					column3: requestObject.column3,
+					column4: requestObject.column4,
+					column5: requestObject.column5,
+					column6: requestObject.column6,
+					column7: requestObject.column7,
+					column8: requestObject.column8,
+					column9: requestObject.column9,
+					column10: requestObject.column10,
+					column11: requestObject.column11,
+					column12: requestObject.column12,
+					column13: requestObject.column13,
+					column14: requestObject.column14,
+					column15: requestObject.column15,
+					column16: requestObject.column16,
+					column17: requestObject.column17,
+					column18: requestObject.column18,
+					column19: requestObject.column19,
+					column20: requestObject.column20
+				});
 
-							console.log('=====================================');
-							console.dir(rowitem);
+				console.log('=====================================');
+				console.dir(rowitem);
 
 
-							rowitem.save(function(err) {
-								if (err) {
-									resolve({
-										statusCode: 400,
-										message: err.message
-									});
-								} else {
-									resolve(JSON.stringify(rowitem, null));
-								}
-							});
-				
-			} catch(error) {
- 					  reject({ statusCode: enums.STATUS_ITEM.ERROR,
-						       message: error.message });
+				rowitem.save(function(err) {
+					if (err) {
+						resolve({
+							statusCode: 400,
+							message: err.message
+						});
+					} else {
+						resolve(JSON.stringify(rowitem, null));
+					}
+				});
+
+			} catch (error) {
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
 			}
 		});
 		return promesa;
@@ -85,7 +176,7 @@ module.exports = {
 						});
 					}
 
-					if (!enums.CheckExist(res._doc))  {
+					if (!enums.CheckExist(res._doc)) {
 						resolve(enums.STATUS_ITEM.INCIDENCIA);
 					} else {
 						//console.dir(res);
@@ -96,12 +187,12 @@ module.exports = {
 					}
 				});
 			} catch (error) {
-				
-					reject({
-						statusCode: enums.STATUS_ITEM.ERROR,
-						message: error.message
-					});
-				
+
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+
 			}
 		});
 		return promesa;
