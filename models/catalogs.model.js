@@ -1,9 +1,71 @@
 const catalogEntity = require('../entities/catalogs.entity');
+const rowsEntity = require('../entities/catalogdetails.entity');
+
 const enums = require('../util/enum.util');
 const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
+	asyncDataAdd: function(requestObject){
+		const promesa = new Promise(function (resolve,reject) {
+			// body...
+			try {
+				// console.dir(requestObject);
+				// const datetmp = enums.DateTimeNowToMilliSeconds();
+				const datetmp = enums.DateTimeNowToMilliSeconds();
+
+							let rowitem = rowsEntity({
+								status_item: true,
+								create_date: datetmp,
+								modification_date: 0,
+								catalogsid: requestObject.catalogsid, // buscar como obtener maximo
+								//table_name: catalogObj.table_name,
+								row_order: requestObject.row_order,
+								colum0 : requestObject.colum0 ,
+								colum1 : requestObject.colum1 ,
+								colum2 : requestObject.colum2 ,
+								colum3 : requestObject.colum3 ,
+								colum4 : requestObject.colum4 ,
+								colum5 : requestObject.colum5 ,
+								colum6 : requestObject.colum6 ,
+								colum7 : requestObject.colum7 ,
+								colum8 : requestObject.colum8 ,
+								colum9 : requestObject.colum9 ,
+								colum10 : requestObject.colum10 ,
+								colum11 : requestObject.colum11 ,
+								colum12 : requestObject.colum12 ,
+								colum13 : requestObject.colum13 ,
+								colum14 : requestObject.colum14 ,
+								colum15 : requestObject.colum15 ,
+								colum16 : requestObject.colum16 ,
+								colum17 : requestObject.colum17 ,
+								colum18 : requestObject.colum18 ,
+								colum19 : requestObject.colum19 ,
+								colum20 : requestObject.colum20 
+							});
+
+							console.log('=====================================');
+							console.dir(rowitem);
+
+
+							rowitem.save(function(err) {
+								if (err) {
+									resolve({
+										statusCode: 400,
+										message: err.message
+									});
+								} else {
+									resolve(JSON.stringify(rowitem, null));
+								}
+							});
+				
+			} catch(error) {
+ 					  reject({ statusCode: enums.STATUS_ITEM.ERROR,
+						       message: error.message });
+			}
+		});
+		return promesa;
+	},
 	asyncPatch: function(catalogObj) {
 		const promesa = new Promise(function(resolve, reject) {
 			try {
@@ -23,22 +85,23 @@ module.exports = {
 						});
 					}
 
-					if (res == null || typeof(res._doc) == 'undefined') {
+					if (!enums.CheckExist(res._doc))  {
 						resolve(enums.STATUS_ITEM.INCIDENCIA);
 					} else {
+						//console.dir(res);
 						resolve({
 							statusCode: enums.STATUS_ITEM.OKNOCONTENT,
-							message: ''
+							message: JSON.stringify(res)
 						});
 					}
 				});
 			} catch (error) {
-				if (error) {
+				
 					reject({
 						statusCode: enums.STATUS_ITEM.ERROR,
 						message: error.message
 					});
-				}
+				
 			}
 		});
 		return promesa;

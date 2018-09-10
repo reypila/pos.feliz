@@ -5,18 +5,66 @@ const modelCatalog = require('../models/catalogs.model');
 
 
 module.exports = {
+  DataAdd: function function_name(req,res,next) {
+    // body...
+    if (!enums.CheckExist(req.params.catalogid)
+    || !enums.CheckExist(req.body.status_item)
+    || !enums.CheckExist(req.body.row_order))
+    {
+      responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required property not set id, catalogid, status_item, row_order', '', '', '');
+       next();
+    }
+
+    // fill Catalog object
+    const requestObject = {
+      catalogsid: req.params.catalogid,
+      status_item: req.body.status_item,
+      row_order: req.body.row_order,
+      column0 : req.body.column0,
+      column1 : req.body.column1,
+      column2 : req.body.column2,
+      column3 : req.body.column3,
+      column4 : req.body.column4,
+      column5 : req.body.column5,
+      column6 : req.body.column6,
+      column7 : req.body.column7,
+      column8 : req.body.column8,
+      column9 : req.body.column9,
+      column10 : req.body.column10,
+      column11 : req.body.column11,
+      column12 : req.body.column12,
+      column13 : req.body.column13,
+      column14 : req.body.column14,
+      column15 : req.body.column15,
+      column16 : req.body.column16,
+      column17 : req.body.column17,
+      column18 : req.body.column18,
+      column19 : req.body.column19,
+      column20 : req.body.column20
+    };
+
+    console.dir(requestObject);
+    
+    modelCatalog.asyncDataAdd(requestObject).then(resolve => {
+      if (resolve.statusCode == enums.STATUS_ITEM.ERROR) {
+        responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', resolve.message, '', '', '');
+      } else {
+        responseutil.Send(res, enums.STATUS_ITEM.OK, resolve, '', '');
+      }
+    }, reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+      next();
+    });
+  },
   Patch: function function_name(req, res, next) {
 
-    if (typeof req.params.id == 'undefined' ||
-      typeof req.body.status_item == 'undefined')
-    // ||
-    // !req.body.status_item ||
-    // !req.body.table_name ||
-    // !req.body.row_order
+    if (!enums.CheckExist(req.params.id)
+    || !enums.CheckExist(req.body.status_item)
+    || !enums.CheckExist(req.body.table_name)
+    || !enums.CheckExist(req.body.row_order))
     {
-
       responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required property not set id, status_item, table_name or row_order', '', '', '');
-      // next();
+       next();
     }
 
     // fill Catalog object

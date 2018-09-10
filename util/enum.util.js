@@ -45,12 +45,16 @@ const DateTimeNowToMilliSeconds = function() {
     return n;
 }
 
-const ValidateUndefined = function function_name(argument) {
-    // body...
-
+const CheckExist = function function_name(argument) {
+    if (typeof argument === 'undefined' || argument == null )  {
+        return false;
+    }else{
+        return true;
+    }
 }
 
 module.exports = {
+    CheckExist,
     DateTimeNowToMilliSeconds,
     STATUS_ITEM,
     STATUS_ITEM2,

@@ -14,11 +14,11 @@ let objCatalogdetails = new Schema({
         type: Number,
         required: true
     },
-    catalogs: {
+    catalogsid: {
         type: Schema.Types.ObjectId,
         ref: 'catalogs'
     },
-    row: {
+    row_order: {
         type: Number,
         required: true
     },
@@ -42,7 +42,7 @@ let objCatalogdetails = new Schema({
     column17: String,
     column18: String,
     column19: String,
-    column20: String,
+    column20: String
 });
 
 let catalogdetails = mongoose.model('catalogsdetails', objCatalogdetails);
