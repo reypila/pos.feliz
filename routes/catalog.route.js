@@ -3,10 +3,12 @@ const ctrlCatalog = require('../controllers/catalog.controller');
  
 module.exports = function(app) {
 	
+	app.delete('/api/catalogs/data/:catalogid',ctrlCatalog.DataDelete);
 	app.patch('/api/catalogs/data/:catalogid',ctrlCatalog.DataPatch);
 	app.get('/api/catalogs/data/:catalogid', ctrlCatalog.DataGet);
     app.post('/api/catalogs/:catalogid/data',ctrlCatalog.DataAdd);
 	
+	app.patch('/api/catalogs/:id', ctrlCatalog.Delete);
 	app.patch('/api/catalogs/:id', ctrlCatalog.Patch);
 	app.get('/api/catalogs', ctrlCatalog.GetAll);
 	app.post('/api/catalogs', ctrlCatalog.Create);

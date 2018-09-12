@@ -5,10 +5,33 @@ const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
+	asyncDataAll: function(argument) {
+		let promesa = new Promise(function(resolve, reject) {
+			try {
+				const query = rowsEntity.find({});
+				query.exec(function(error, docs) {
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
+					}
+					docs.length >= 1 ? resolve(docs) : resolve(0);
+				});
+			} catch (error) {
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+			}
+		});
+
+		return promesa;
+	},
 	asynDataPatch: function(requestObject) {
 		const promesa = new Promise(function(resolve, reject) {
 			try {
-				
+
 				const datetmp = enums.DateTimeNowToMilliSeconds();
 				let query = rowsEntity.findOneAndUpdate({
 					'_id': requestObject.id
@@ -44,7 +67,7 @@ module.exports = {
 							message: error.message
 						});
 					}
-					
+
 
 					if (!enums.CheckExist(res._doc)) {
 						resolve(enums.STATUS_ITEM.INCIDENCIA);

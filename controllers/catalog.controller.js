@@ -5,6 +5,12 @@ const modelCatalog = require('../models/catalogs.model');
 
 
 module.exports = {
+  DataDelete: function (req, res, next) {
+    
+  }
+  DataGetAll: function(req,res,next){
+    
+  },
   DataPatch: function(req, res, next) {
     if (!enums.CheckExist(req.params.catalogid)) {
       responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required parameter not set catalogid', '', '', '');
@@ -19,7 +25,22 @@ module.exports = {
       column2: req.body.column2,
       column3: req.body.column3,
       column4: req.body.column4,
-      column5: req.body.column5
+      column5: req.body.column5,
+      column6: req.body.column6,
+      column7: req.body.column7,
+      column8: req.body.column8,
+      column9: req.body.column9,
+      column10: req.body.column10,
+      column11: req.body.column11,
+      column12: req.body.column12,
+      column13: req.body.column13,
+      column14: req.body.column14,
+      column15: req.body.column15,
+      column16: req.body.column16,
+      column17: req.body.column17,
+      column18: req.body.column18,
+      column19: req.body.column19,
+      column20: req.body.column20
     };
 
     modelCatalog.asynDataPatch(requestObject).then(result => {
