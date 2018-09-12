@@ -5,7 +5,43 @@ const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
-	asyncDataAll: function(argument) {
+	asyncDataDelete: function(requestObject) {
+		const promesa = new Promise(function function_name(resolve, reject) {
+			try {
+				const datetmp = enums.DateTimeNowToMilliSeconds();
+				let query = rowsEntity.findOneAndUpdate({
+					'_id': requestObject.id
+				}, {
+					status_item: false,
+					modification_date: datetmp,
+
+				}, function(error, res) {
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
+					}
+
+					if (!enums.CheckExist(res._doc)) {
+						resolve(enums.STATUS_ITEM.INCIDENCIA);
+					} else {
+						resolve({
+							statusCode: enums.STATUS_ITEM.OKNOCONTENT,
+							message: JSON.stringify(res)
+						});
+					}
+				});
+			} catch (error) {
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+			}
+		});
+		return promesa;
+	},
+	asyncDataAll: function(requestObject) {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 				const query = rowsEntity.find({});
@@ -180,6 +216,41 @@ module.exports = {
 		});
 		return promesa;
 	},
+	asyncDelete: function(requestObject) {
+		const promesa = new Promise(function function_name(resolve, reject) {
+			try {
+				const datetmp = enums.DateTimeNowToMilliSeconds();
+				let query = catalogEntity.findOneAndUpdate({
+					'_id': requestObject.id
+				}, {
+					status_item: false,
+					modification_date: datetmp,
+
+				}, function(error, res) {
+					if (error) {
+						reject({
+							statusCode: enums.STATUS_ITEM.ERROR,
+							message: error.message
+						});
+					}
+
+					if (!enums.CheckExist(res._doc)) {
+						resolve(enums.STATUS_ITEM.INCIDENCIA);
+					} else {
+						resolve({
+							statusCode: enums.STATUS_ITEM.OKNOCONTENT,
+							message: JSON.stringify(res)
+						});
+					}
+				});
+			} catch (error) {
+				reject({
+					statusCode: enums.STATUS_ITEM.ERROR,
+					message: error.message
+				});
+			}
+		});
+	},
 	asyncPatch: function(catalogObj) {
 		const promesa = new Promise(function(resolve, reject) {
 			try {
@@ -230,8 +301,6 @@ module.exports = {
 
 				query.exec(function(error, docs) {
 					if (error) {
-						// console.log('query.exec');
-						//console.dir(error);
 						reject({
 							statusCode: enums.STATUS_ITEM.ERROR,
 							message: error.message
@@ -344,31 +413,5 @@ module.exports = {
 		});
 		return promesa;
 	}
-
-	//	asyncCheckExist: function(catalogObj) {
-	//		return new Promise(function(resolve, reject) {
-	//			try {
-	//				let query = usermodel.findOne({
-	//					'email': catalogObj.email,
-	//					'password': catalogObj.password
-	//				}, '_id id_item', function(err, res) {
-	//					if (err) return err;
-	//
-	//					if (res == null) {
-	//						console.log('null = 0');
-	//						resolve(0);
-	//					} else {
-	//						// console.log(' = 1');
-	//						const result = (res._doc) ? 1 : 0;
-	//						resolve(result);
-	//					}
-	//				});
-	//
-	//			} catch (error) {
-	//				reject(error);
-	//			}
-	//		});
-	//	},
-
 
 }

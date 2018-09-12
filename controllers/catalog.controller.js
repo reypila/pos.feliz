@@ -5,11 +5,30 @@ const modelCatalog = require('../models/catalogs.model');
 
 
 module.exports = {
-  DataDelete: function (req, res, next) {
-    
-  }
-  DataGetAll: function(req,res,next){
-    
+  DataDelete: function(req, res, next) {
+    const requestObject = {
+      id: req.params.catalogid
+    };
+    modelCatalog.asyncDataDelete(requestObject).then(resolve => {
+      if (resolve.statusCode == enums.STATUS_ITEM.ERROR) {
+        responseutil.Send(res, 400, '', resolve.message, '', '', '');
+      }
+      responseutil.Send(res, 200, resolve, '', '', '', '');
+
+    }, reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+    });
+  },
+  DataGetAll: function(req, res, next) {
+    modelCatalog.asyncDataAll().then(resolve => {
+      if (resolve.statusCode == enums.STATUS_ITEM.ERROR) {
+        responseutil.Send(res, 400, '', resolve.message, '', '', '');
+      }
+      responseutil.Send(res, 200, resolve, '', '', '', '');
+
+    }, reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+    });
   },
   DataPatch: function(req, res, next) {
     if (!enums.CheckExist(req.params.catalogid)) {
@@ -112,8 +131,6 @@ module.exports = {
       column20: req.body.column20
     };
 
-    // console.dir(requestObject);
-
     modelCatalog.asyncDataAdd(requestObject).then(resolve => {
       if (resolve.statusCode == enums.STATUS_ITEM.ERROR) {
         responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', resolve.message, '', '', '');
@@ -124,6 +141,45 @@ module.exports = {
       responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
       next();
     });
+  },
+  Delete: function(req, res, next) {
+    if (!enums.CheckExist(req.params.id)) {
+      responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required property not set id ', '', '', '');
+      next();
+    }
+
+    // fill Catalog object
+    const requestObject = {
+      id: req.params.id,
+      status_item: false
+
+    };
+
+    modelCatalog.asyncDelete(requestObject).then(resolve => {
+      if (resolve.statusCode == enums.STATUS_ITEM.ERROR) {
+        responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', resolve.message, '', '', '');
+      } else {
+        responseutil.Send(res, enums.STATUS_ITEM.OK, resolve, '', '');
+      }
+    }, reject => {
+      responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+      next();
+    });
+  },
+  Update: function(req, res, next) {
+    const objCatalogDetails = {
+      _id: req.body._id,
+      maker: req.body.maker,
+      field0: req.body.name,
+      status_item: req.body.status_item
+    };
+
+    model.asyncUpdate(objCatalogDetails).then(x => {
+      console.dir(x);
+      (x == 0) ? responseutil.Send(res, 400, '', 'No se logro modificar', '', ''): responseutil.Send(res, 200, '', 'Modificado con exito', '', '');
+      next();
+    });
+
   },
   Patch: function function_name(req, res, next) {
 
@@ -209,31 +265,5 @@ module.exports = {
   }
 
 
-  // Delete: function(req, res, next) {
-  //   let objCatalogDetails = {
-  //     _id: req.body._id,
-  //     maker: req.body.maker
-  //   };
-  //   model.asyncDelete(objCatalogDetails).then(x => {
-  //     console.dir(x);
-  //     (x == 0) ? responseutil.Send(res, 400, '', 'No se logro borrar', '', ''): responseutil.Send(res, 200, '', 'Borrado con exito', '', '');
-  //     next();
-  //   });
-  // },
-  // Update: function(req, res, next) {
-  //   const objCatalogDetails = {
-  //     _id: req.body._id,
-  //     maker: req.body.maker,
-  //     field0: req.body.name,
-  //     status_item: req.body.status_item
-  //   };
-
-  //   model.asyncUpdate(objCatalogDetails).then(x => {
-  //     console.dir(x);
-  //     (x == 0) ? responseutil.Send(res, 400, '', 'No se logro modificar', '', ''): responseutil.Send(res, 200, '', 'Modificado con exito', '', '');
-  //     next();
-  //   });
-
-  // }
 
 }
