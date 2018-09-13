@@ -10,16 +10,21 @@ const CATALOGS = {
     "ROLES": 5
 }
 
+const ROLES = {
+    "ADMIN": "1",
+    "VENDEDOR": "2",
+    "AUDITORIA" : "3"
+}
 const STATUS_ITEM = {
-    "recoveryPwd": 10,
+    "EXISTE": 1,
+    "PENDIENTE": 2,
+    "RECOVERYPASSWORD": 3,
     "OK": 200,
     "OKNOCONTENT": 204,
     "DELETE": -1,
     "ACTIVO": 100,
     "INACTIVO": -100,
     "INCIDENCIA": -1,
-    "PENDIENTE": 2,
-    "EXISTE": 1,
     "ERROR": 500, // Internal Server Error
     "NOTFOUND": 404 ,
     "BADREQUEST": 404 
@@ -57,7 +62,6 @@ module.exports = {
     CheckExist,
     DateTimeNowToMilliSeconds,
     STATUS_ITEM,
-    STATUS_ITEM2,
     RESOURCES,
     CATALOGS,
     GENRE

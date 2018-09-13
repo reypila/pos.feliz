@@ -20,5 +20,5 @@ let objProduct = new Schema({
     id_measurement_unit: { type: Number, required: true },
    });
 
-const Product = mongoose.model('product', objUser);
+const Product = mongoose.model('product', objProduct);
 module.exports = Product;
