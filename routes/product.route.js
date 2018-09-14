@@ -1,53 +1,21 @@
-const ctrl = require('../controllers/user.controller');
-const util = require('util');
-const cripto = require('../util/crypto.util');
-const jwt = require('jsonwebtoken');
-const SuperSecret = require('../config/SuperSecret');
-
-module.exports = function (app) {
-    app.get('/', function (req, res) {
-        return res.json({
-            success: true,
-            message: 'Quiuboles.'
-        });
-    });
-
-
-    // app.get('/api/user/upload', ctrl.UploadImg);
-    // recovery account 
-    // app.post('/api/user/recovery', ctrlLogin.RecoveryPWD);
-    // create new user
-    app.post('/api/user', ctrl.Create);
-    //  get token authenticate 
-    app.post('/api/authenticate', ctrl.CheckExist);
-    // authenticate path
-    app.use('/api', function(req, res, next) {
-        // check header or url parameters or post parameters for token
-        let token = req.body.token || req.query.token || req.headers['x-access-token'];
-        // decode token
-        if (token) {
-            // verifies secret and checks exp
-            jwt.verify(token, SuperSecret.NIP, function(err, decoded) {
-                if (err) {
-                    return res.json({
-                        success: false,
-                        message: 'Failed to authenticate token.'
-                    });
-                } else {
-                    req.decoded = decoded;
-                    next();
-                }
-            });
-        } else {
-            return res.status(403).send({
-                success: false,
-                message: 'No token provided.'
-            });
-        }
-    });
-    // get user by id 
-    app.get('/api/user/:id', ctrl.GetById);
+const ctrlProduct = require('../controllers/product.controller');
+// const util = require('util');
+ 
+module.exports = function(app) {
     
-    app.put('/api/user/:id', ctrl.Update)
-    // app.get('/api/user', ctrl.GetAll);
+    // app.delete('/api/products/data/:catalogid',ctrlProduct.DataDelete); // miss
+    // app.patch('/api/products/data/:catalogid',ctrlProduct.DataPatch); //check
+    // app.get('/api/products/data/:catalogid', ctrlProduct.DataGet); // miss
+    // app.get('/api/products/data', ctrlProduct.DataGetAll); // miss
+    // app.post('/api/products/:catalogid/data',ctrlProduct.DataAdd);
+    
+    // product crud
+    app.delete('/api/products/:id', ctrlProduct.Delete); // miss
+    app.patch('/api/products/:id', ctrlProduct.Patch);
+    app.get('/api/products/:id', ctrlProduct.Get); // miss
+    app.get('/api/products', ctrlProduct.GetAll);
+    app.post('/api/products', ctrlProduct.Create);
+
+    
+
 }

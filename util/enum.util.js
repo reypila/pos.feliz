@@ -16,6 +16,7 @@ const ROLES = {
     "AUDITORIA" : "3"
 }
 const STATUS_ITEM = {
+    "CONFLICT":409,
     "EXISTE": 1,
     "PENDIENTE": 2,
     "RECOVERYPASSWORD": 3,
@@ -26,7 +27,7 @@ const STATUS_ITEM = {
     "INACTIVO": -100,
     "INCIDENCIA": -1,
     "ERROR": 500, // Internal Server Error
-    "NOTFOUND": 404 ,
+    "NOTFOUND": 400 ,
     "BADREQUEST": 404 
 }
 
