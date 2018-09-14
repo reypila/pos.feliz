@@ -315,7 +315,10 @@ module.exports = {
 						});
 					}
 
-					docs.length >= 1 ? resolve(docs) : resolve({
+					docs.length >= 1 ? resolve({
+						statusCode: enums.STATUS_ITEM.EXISTE,
+						message: 'No existe item'
+					}) : resolve({
 						statusCode: enums.STATUS_ITEM.NOTFOUND,
 						message: 'No existe item'
 					});
@@ -367,7 +370,14 @@ module.exports = {
 					if (err) {
 						resolve(-1);
 					}
-					let tmprow = parseInt(docgetmax.id_table) + 1;
+					// console.log('******************************************************');
+					// console.dir(docgetmax);
+					// console.log('******************************************************');
+					let tmprow = 0;
+					if (enums.CheckExist(docgetmax)) {
+						tmprow = parseInt(docgetmax.item_order) + 1;
+					}
+
 					const datetmp = enums.DateTimeNowToMilliSeconds();
 
 					let product = productEntity({
@@ -395,7 +405,10 @@ module.exports = {
 								message: err.message
 							});
 						} else {
-							resolve(JSON.stringify(product, null));
+							resolve({
+								statusCode: enums.STATUS_ITEM.OK,
+								message: JSON.stringify(product, null)
+							});
 						}
 					});
 				});
