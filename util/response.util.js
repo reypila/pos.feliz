@@ -8,7 +8,12 @@ module.exports = {
             throw Error("numberResponse is required");
         }
         
-        const buildResponse = { "result": result, "message": message, "href": href, "function": functionName };
+		const buildResponse = {
+			"result": result,
+			"message": message,
+			"href": href,
+			"function": functionName
+		};
         res.status(numberResponse).send(JSON.stringify(buildResponse));
     }
 };
