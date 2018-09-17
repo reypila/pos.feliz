@@ -57,9 +57,8 @@ module.exports = {
 		// check if no exist
 		productModel.asyncGet(productObject).then(result => {
 			if (result.statusCode == enums.STATUS_ITEM.EXISTE) {
-				console.dir(result);
-				responseutil.Send(res, result.statusCode, result.result, result.message, result.href, result.function);
-				//next();
+				responseutil.Send(res, enums.STATUS_ITEM.CONFLICT,result.result,result.message,result.href,result.function);
+				next();
 			} else {
 				// create product
 				productModel.asyncCreate(productObject).then(result2 => {
@@ -77,5 +76,7 @@ module.exports = {
 			responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
 			next();
 		});
+
+		// next();
 	}
 }

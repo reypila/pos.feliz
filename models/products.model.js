@@ -80,9 +80,11 @@ module.exports = {
 					}
 
 					let tmprow = 0;
-					// console.dir(docgetmax);
+					console.log('----------------------------------------------');
+					 console.dir(docgetmax);
+					console.log('----------------------------------------------');
 
-					if (enums.CheckExist(docgetmax._doc)) {
+					if (enums.CheckExist(docgetmax)) {
 						tmprow = parseInt(docgetmax._doc.item_order) + 1;
 					}
 
