@@ -69,6 +69,7 @@ module.exports = {
 				query.exec(function (error, docs) {
 					if (error) {
 						reject({
+							statusItem: enums.STATUS_ITEM.INCIDENCIA,
 							statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
 							result: '',
 							message: error.message,
@@ -76,7 +77,7 @@ module.exports = {
 							function: ''
 						});
 					}
-					// console.dir(docs);
+//					console.dir(docs);
 
 					docs.length >= 1 ? resolve({
 						statusItem: enums.STATUS_ITEM.EXISTE,
@@ -89,7 +90,7 @@ module.exports = {
 						statusItem: enums.STATUS_ITEM.INEXISTENTE,
 						statusCode: enums.HTTP_STATUS_CODE.NO_CONTENT,
 						result: '',
-						message: 'Existe item',
+						message: 'No existe item',
 						href: '',
 						function: ''
 					});

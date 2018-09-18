@@ -19,12 +19,16 @@ module.exports = {
 		const objcatalogdetails = {
 			id: req.params.id
 		};
-		productModel.asynGet(objcatalogdetails).then(result => {
+		console.dir(objcatalogdetails)
+		productModel.asyncGet(objcatalogdetails).then(result => {
 			responseutil.Send(res, result.statusCode, result.result, result.message, result.href, result.function);
+			next();
+		
 		}, reject => {
 			responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
-		});
 		next();
+			
+		});
 	},
 	Create: function (req, res, next) {
 		// validate must arguments
@@ -67,7 +71,6 @@ module.exports = {
 				// create product
 				productModel.asyncCreate(productObject).then(result2 => {
 					responseutil.Send(res, result2.statusCode, result2.result, result2.message, result2.href, result2.function);
-
 				}, reject2 => {
 					responseutil.Send(res, reject2.statusCode, reject2.result, reject2.message, reject2.href, reject2.function);
 					next();
@@ -77,7 +80,5 @@ module.exports = {
 			responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
 			next();
 		});
-		// console.log('end next');
-		// next();
 	}
 }
