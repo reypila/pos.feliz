@@ -263,7 +263,4 @@ module.exports = {
       responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
     });
   }
-
-
-
 }

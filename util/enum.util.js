@@ -2,6 +2,18 @@
  * Created by developer on 6/28/2017.
  */
 
+const MEASUREMENT_UNIT = {
+    "H87": "Pieza (Múltiplos / Fracciones / Decimales)",
+    "xun": "Unidad (Unidades de empaque)",
+    "KGM": "Kilogramo (Mecánica)",
+    "MTR": "Metro (Tiempo y Espacio)",
+    "LTR": "Litro (Tiempo y Espacio)",
+    "XBX": "Caja (Unidades de empaque)",
+    "XPK": "Paquete (Unidades de empaque)",
+    "XKI": "Kit (Conjunto de piezas)",
+    "GRM": "Gramos (Mecánica)"
+}
+
 const CATALOGS = {
     "TABLA_OPTION": 0,
     "ROW_OPTION": 1,
@@ -23,7 +35,8 @@ const STATUS_ITEM = {
     "EXISTE": 1,
     "PENDIENTE": 2,
     "RECOVERYPASSWORD": 3,
-    "ACTIVO": 4
+    "ACTIVO": 4,
+    "SUCCESS":5
 }
 
 const HTTP_STATUS_CODE = {
@@ -45,9 +58,6 @@ const RESOURCES = {
     "uri": 'http://localhost:8084/',
 }
 
-const STATUS_ITEM2 = {
-    "RecoveryPwd2": 10
-}
 
 const GENRE = {
     "NEUTRAL": 0,
@@ -55,7 +65,7 @@ const GENRE = {
     "FEMALE": 2
 }
 
-const DateTimeNowToMilliSeconds = function() {
+const DateTimeNowToMilliSeconds = function () {
     var d = new Date();
     var n = d.getTime();
     return n;
@@ -70,6 +80,7 @@ const CheckExist = function function_name(argument) {
 }
 
 module.exports = {
+    MEASUREMENT_UNIT,
     HTTP_STATUS_CODE,
     CheckExist,
     DateTimeNowToMilliSeconds,

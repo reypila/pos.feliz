@@ -1,10 +1,107 @@
 const productEntity = require('../entities/products.entity');
-const rowsEntity = require('../entities/catalogdetails.entity');
+// const rowsEntity = require('../entities/catalogdetails.entity');
 const enums = require('../util/enum.util');
-const responseutil = require('../util/response.util')
+// const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
+	asyncDelete: function (productObject) {
+		let promesa = new Promise(function (resolve, reject) {
+			try {
+				// start
+				let query = productEntity.findOneAndUpdate({
+					'_id': productObject.id
+				}, {
+					status_item_id: enums.STATUS_ITEM.DELETE,
+					modification_date: productObject.modification_date
+				}, function (error, docs) {
+					if (error) {
+						reject({
+							statusItem: enums.STATUS_ITEM.INCIDENCIA,
+							statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+							result: '',
+							message: error.message,
+							href: '',
+							function: ''
+						});
+					}
+					resolve({
+						statusItem: enums.STATUS_ITEM.SUCCESS,
+						statusCode: enums.HTTP_STATUS_CODE.OK,
+						result: JSON.stringify(docs, null),
+						message: '',
+						href: '',
+						function: ''
+					});
+				});
+			} catch (error) {
+				reject({
+					statusItem: enums.STATUS_ITEM.INCIDENCIA,
+					statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+					result: '',
+					message: error.message,
+					href: '',
+					function: ''
+				});
+			}
+		});
+		return promesa;
+	},
+	asyncPatch: function (productObject) {
+		let promesa = new Promise(function (resolve, reject) {
+			try {
+
+				let query = productEntity.findOneAndUpdate({
+					'_id': productObject.id
+				}, {
+					item_order: productObject.item_order,
+					status_item_id: productObject.status_item_id,
+					maker: productObject.maker,
+					modification_date: productObject.modification_date,
+					name: productObject.name,
+					barcode: productObject.barcode,
+					weight: productObject.weight,
+					size: productObject.size,
+					stock: productObject.stock,
+					brand: productObject.brand,
+					cost: productObject.cost,
+					price: productObject.price,
+					pick_url: productObject.pick_url,
+					description: productObject.description,
+					measurement_unit_id: productObject.measurement_unit_id
+				}, function (error, docs) {
+					if (error) {
+						reject({
+							statusItem: enums.STATUS_ITEM.INCIDENCIA,
+							statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+							result: '',
+							message: error.message,
+							href: '',
+							function: ''
+						});
+					}
+					resolve({
+						statusItem: enums.STATUS_ITEM.SUCCESS,
+						statusCode: enums.HTTP_STATUS_CODE.OK,
+						result: JSON.stringify(docs, null),
+						message: '',
+						href: '',
+						function: ''
+					});
+				});
+			} catch (error) {
+				reject({
+					statusItem: enums.STATUS_ITEM.INCIDENCIA,
+					statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+					result: '',
+					message: error.message,
+					href: '',
+					function: ''
+				});
+			}
+		});
+		return promesa;
+	},
 	asyncGetAll: function () {
 		let promesa = new Promise(function (resolve, reject) {
 			try {
@@ -77,20 +174,19 @@ module.exports = {
 							function: ''
 						});
 					}
-//					console.dir(docs);
 
 					docs.length >= 1 ? resolve({
 						statusItem: enums.STATUS_ITEM.EXISTE,
 						statusCode: enums.HTTP_STATUS_CODE.OK,
 						result: JSON.stringify(docs, null),
-						message: 'Existe item',
+						message: 'Item Existe',
 						href: '',
 						function: ''
 					}) : resolve({
 						statusItem: enums.STATUS_ITEM.INEXISTENTE,
 						statusCode: enums.HTTP_STATUS_CODE.NO_CONTENT,
 						result: '',
-						message: 'No existe item',
+						message: 'Item No Existe',
 						href: '',
 						function: ''
 					});
@@ -135,8 +231,6 @@ module.exports = {
 						tmprow = parseInt(docgetmax.item_order) + 1;
 					}
 
-					const datetmp = enums.DateTimeNowToMilliSeconds();
-
 					let product = productEntity({
 						item_order: tmprow,
 						status_item_id: enums.STATUS_ITEM.ACTIVO,
@@ -151,11 +245,12 @@ module.exports = {
 						brand: productObject.brand,
 						cost: productObject.cost,
 						price: productObject.price,
-						pick_url: productObject.pick_url
+						pick_url: productObject.pick_url,
+						description: productObject.description,
+						measurement_unit_id: productObject.measurement_unit_id
 					});
 
 					product.save(function (error) {
-
 						if (error) {
 							reject({
 								statusItem: enums.STATUS_ITEM.INCIDENCIA,

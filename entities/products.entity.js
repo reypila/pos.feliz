@@ -33,7 +33,15 @@ let objProduct = new Schema({
     brand: String,
     cost: Number,
     price: Number,
-    pick_url: String
+    pick_url: String,
+    description: {
+        type: String,
+        required: false
+    },
+    measurement_unit_id: {
+        type: String,
+        required: true
+    },
 });
 
 const Product = mongoose.model('products', objProduct);
