@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 let objProduct = new Schema({
     id_item: { type: Number, require: true },
-    status_item: { type: Number, require: true },
+    status_item_id: { type: Number, require: true },
     maker: { type: String, required: true },
     create_date: { type: Date, required: true },
     modification_date: { type: Date, required: true }, 

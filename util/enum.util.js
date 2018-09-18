@@ -13,22 +13,32 @@ const CATALOGS = {
 const ROLES = {
     "ADMIN": "1",
     "VENDEDOR": "2",
-    "AUDITORIA" : "3"
+    "AUDITORIA": "3"
 }
 const STATUS_ITEM = {
-    "CONFLICT":409,
+    "INEXISTENTE": -4,
+    "INCIDENCIA": -3,
+    "INACTIVO": -2,
+    "DELETE": -1,
     "EXISTE": 1,
     "PENDIENTE": 2,
     "RECOVERYPASSWORD": 3,
+    "ACTIVO": 4
+}
+
+const HTTP_STATUS_CODE = {
     "OK": 200,
-    "OKNOCONTENT": 204,
-    "DELETE": -1,
-    "ACTIVO": 100,
-    "INACTIVO": -100,
-    "INCIDENCIA": -1,
-    "ERROR": 500, // Internal Server Error
-    "NOTFOUND": 400 ,
-    "BADREQUEST": 404 
+    "CREATED": 201,
+    "ACCEPTED": 202,
+    "NO_CONTENT": 204,
+    "BAD_REQUEST": 400,
+    "UNAUTHORIZED": 401,
+    "FORBIDDEN": 403,
+    "NOT_FOUND": 404,
+    "CONFLICT": 409,
+    "INTERNAL_SERVER_ERROR": 500,
+    "NOT_IMPLEMENTED": 501,
+    "BAD_GATEWAY": 502
 }
 
 const RESOURCES = {
@@ -52,14 +62,15 @@ const DateTimeNowToMilliSeconds = function() {
 }
 
 const CheckExist = function function_name(argument) {
-    if (typeof argument === 'undefined' || argument == null )  {
+    if (typeof argument === 'undefined' || argument == null) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
 module.exports = {
+    HTTP_STATUS_CODE,
     CheckExist,
     DateTimeNowToMilliSeconds,
     STATUS_ITEM,

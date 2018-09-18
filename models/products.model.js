@@ -5,8 +5,53 @@ const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
-	asyncGet: function(productObject) {
-		let promesa = new Promise(function(resolve, reject) {
+	asyncGetAll: function () {
+		let promesa = new Promise(function (resolve, reject) {
+			try {
+				const query = productEntity.find({});
+				query.exec(function (error, docs) {
+					if (error) {
+						reject({
+							statusItem: enums.STATUS_ITEM.INCIDENCIA,
+							statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+							result: '',
+							message: error.message,
+							href: '',
+							function: ''
+						});
+					}
+					// console.dir(docs);
+					docs.length >= 1 ? resolve({
+						statusItem: enums.STATUS_ITEM.EXISTE,
+						statusCode: enums.HTTP_STATUS_CODE.OK,
+						result: JSON.stringify(docs, null),
+						message: '',
+						href: '',
+						function: ''
+					}) : resolve({
+						statusItem: enums.STATUS_ITEM.INEXISTENTE,
+						statusCode: enums.HTTP_STATUS_CODE.NO_CONTENT,
+						result: '',
+						message: 'No se encontraron items',
+						href: '',
+						function: ''
+					});
+				});
+			} catch (error) {
+				reject({
+					statusItem: enums.STATUS_ITEM.INCIDENCIA,
+					statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+					result: '',
+					message: error.message,
+					href: '',
+					function: ''
+				});
+			}
+		});
+		return promesa;
+	},
+	asyncGet: function (productObject) {
+		let promesa = new Promise(function (resolve, reject) {
 			try {
 				let query = {};
 
@@ -21,10 +66,10 @@ module.exports = {
 					});
 				}
 
-				query.exec(function(error, docs) {
+				query.exec(function (error, docs) {
 					if (error) {
 						reject({
-							statusCode: enums.STATUS_ITEM.BADREQUEST,
+							statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
 							result: '',
 							message: error.message,
 							href: '',
@@ -34,13 +79,15 @@ module.exports = {
 					// console.dir(docs);
 
 					docs.length >= 1 ? resolve({
-						statusCode: enums.STATUS_ITEM.EXISTE,
+						statusItem: enums.STATUS_ITEM.EXISTE,
+						statusCode: enums.HTTP_STATUS_CODE.OK,
 						result: JSON.stringify(docs, null),
 						message: 'Existe item',
 						href: '',
 						function: ''
 					}) : resolve({
-						statusCode: enums.STATUS_ITEM.NOTFOUND,
+						statusItem: enums.STATUS_ITEM.INEXISTENTE,
+						statusCode: enums.HTTP_STATUS_CODE.NO_CONTENT,
 						result: '',
 						message: 'Existe item',
 						href: '',
@@ -49,7 +96,8 @@ module.exports = {
 				});
 			} catch (error) {
 				reject({
-					statusCode: enums.STATUS_ITEM.BADREQUEST,
+					statusItem: enums.STATUS_ITEM.INCIDENCIA,
+					statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
 					result: '',
 					message: error.message,
 					href: '',
@@ -60,18 +108,19 @@ module.exports = {
 
 		return promesa;
 	},
-	asyncCreate: function(productObject) {
-		let promesa = new Promise(function(resolve, reject) {
+	asyncCreate: function (productObject) {
+		let promesa = new Promise(function (resolve, reject) {
 			try {
 				// get max value id_table
 				const querygetmax = productEntity.findOne({
 					status_item_id: enums.STATUS_ITEM.ACTIVO
 				}).sort('-item_order');
 
-				querygetmax.exec(function(error, docgetmax) {
+				querygetmax.exec(function (error, docgetmax) {
 					if (error) {
 						reject({
-							statusCode: enums.STATUS_ITEM.BADREQUEST,
+							statusItem: enums.STATUS_ITEM.INCIDENCIA,
+							statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
 							result: '',
 							message: error.message,
 							href: '',
@@ -80,19 +129,16 @@ module.exports = {
 					}
 
 					let tmprow = 0;
-					console.log('----------------------------------------------');
-					 console.dir(docgetmax);
-					console.log('----------------------------------------------');
 
 					if (enums.CheckExist(docgetmax)) {
-						tmprow = parseInt(docgetmax._doc.item_order) + 1;
+						tmprow = parseInt(docgetmax.item_order) + 1;
 					}
 
 					const datetmp = enums.DateTimeNowToMilliSeconds();
 
 					let product = productEntity({
 						item_order: tmprow,
-						status_item_id: datetmp,
+						status_item_id: enums.STATUS_ITEM.ACTIVO,
 						maker: productObject.maker,
 						create_date: productObject.create_date,
 						modification_date: productObject.modification_date,
@@ -107,11 +153,12 @@ module.exports = {
 						pick_url: productObject.pick_url
 					});
 
-					product.save(function(error) {
+					product.save(function (error) {
 
 						if (error) {
 							reject({
-								statusCode: enums.STATUS_ITEM.BADREQUEST,
+								statusItem: enums.STATUS_ITEM.INCIDENCIA,
+								statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
 								result: '',
 								message: error.message,
 								href: '',
@@ -119,7 +166,8 @@ module.exports = {
 							});
 						} else {
 							resolve({
-								statusCode: enums.STATUS_ITEM.OK,
+								statusItem: enums.STATUS_ITEM.ACTIVO,
+								statusCode: enums.HTTP_STATUS_CODE.OK,
 								result: JSON.stringify(product, null),
 								message: '',
 								href: '',
@@ -131,7 +179,8 @@ module.exports = {
 
 			} catch (error) {
 				reject({
-					statusCode: enums.STATUS_ITEM.BADREQUEST,
+					statusItem: enums.STATUS_ITEM.INCIDENCIA,
+					statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
 					result: '',
 					message: error.message,
 					href: '',
