@@ -2,7 +2,7 @@
  * Created by Voltron on 12/05/2017.
  */
 const validator = require('validator');
-const usermodel = require('../models/users.model');
+const userModel = require('../models/users.model');
 const crypto = require('../util/crypto.util');
 const userEntity = require('../entities/user.entity');
 const enums = require('../util/enum.util');
@@ -13,94 +13,123 @@ const SuperSecret = require('../config/SuperSecret');
 
 // => users
 module.exports = {
-    GetById: function (req, res, next) {
-        const objUser = { '_id': req.params.id };
-        usermodel.asynGetByID(objUser).then(x => {
-            console.dir(x);
-            if (x <= 1) {
-                responseutil.Send(res, 400, 'No existe usuario', '', '', '');
-            } else {
-                responseutil.Send(res, 200, x, '', '', '');
-            }
+    Get: function(req, res, next) {
+
+        let objUser = {};
+
+        if (enums.CheckExist(req.params.id)) {
+            objUser = {
+                '_id': req.params.id
+            };
+        }
+        if (enums.CheckExist(req.body.email) && enums.CheckExist(req.body.password)) {
+
+            objUser = {
+                'email': req.body.email,
+                'password': req.body.password
+            };
+        }
+
+        userModel.asyncGet(objUser).then(resolve => {
+            responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
+            next();
+        }, reject => {
+            responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
             next();
         });
     },
-    Create: function (req, res) {
-        // console.dir(req.body);
+    Create: function(req, res, next) {
 
-        if (!req.body.email || !req.body.password || !validator.isEmail(req.body.email)) {
-            let tmp = '* Email y Contraseña es requerido ';
-            res.writeHead(400, {
-                'Content-Type': 'text/html; charset=utf-8'
-            });
-            res.write('<html><head><title>400</title><body>400: Bad Request</body> <br/> ' + tmp + '</head>');
-            res.end();
+        if (!enums.CheckExist(req.body.email) ||
+            !enums.CheckExist(req.body.password) ||
+            !validator.isEmail(req.body.email)) {
+            responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required body parameters not set email or password', '', '', '');
+            next();
         } else {
             // let tmppwd = crypto.encrypt(req.body.password);
             let tmppwd = req.body.password;
-            let query = userEntity.find({ email: req.body.email });
-           
-            query.exec(function (err, docs) {
-                if (err) {
-                    console.log('error' + err);
-                    responseutil.Send(res, 400, '', false, ('error' + err), '', '');
+            let query = userEntity.find({
+                email: req.body.email
+            });
+
+
+            query.exec(function(error, docs) {
+                if (error) {
+                    responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', error.message, '', '');
                 }
 
                 if (docs.length >= 1) {
-                   // console.dir(query );
-                    responseutil.Send(res, 400, '', false, 'Usuario ya existe', '', '');
+                    responseutil.Send(res, enums.HTTP_STATUS_CODE.CONFLICT, '', 'Usuario ya existe', '', '');
                 } else {
-                    console.dir('hello');
-                    let datetmp = enums.DateTimeNowToMilliSeconds();
 
-                    let user = userEntity({
-                        item_order: 0,
-                        status_item_id: enums.STATUS_ITEM.PENDIENTE,
-                        maker: req.body.email,
-                        create_date: datetmp,
-                        modification_date: datetmp,
-                        email: req.body.email,
-                        password: tmppwd,
-                        name: '',
-                        lastname: '',
-                        lastname2: '',
-                        alternatemail: '',
-                        birthday: 0,
-                        rfc: '',
-                        curp: '',
-                        genre: 0,
-                        zipcode: '',
-                        home_reference: '',
-                        address: '',
-                        apartment_number_int: '',
-                        apartment_number_ext: '',
-                        telephone_number: '',
-                        telephone_number2: '',
-                        rol_id: 'NA',
-                    });
 
-                    user.save(function (err) {
-                        if (err) {
-                            // responseutil.Send(res,400,'',false,'Usuario ya existe','','');
-                            responseutil.Send(res, 400, '', err.message, '', '', '');
-                            // return err;
-                        } else {
-                            email.init(req.body.email);
-                           // console.log('end email process');
-                            responseutil.Send(res, 200, JSON.stringify(user), 'OK', '', '');
+                    const querygetmax = userEntity.findOne().sort('-item_order');
+
+                    querygetmax.exec(function(err, docgetmax) {
+                        if (error) {
+                            responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', error.message, '', '');
                         }
+
+                        let tmprow = 0;
+
+                        if (enums.CheckExist(docgetmax)) {
+                            tmprow = parseInt(docgetmax.item_order) + 1;
+                        }
+                        // start
+                        let datetmp = enums.DateTimeNowToMilliSeconds();
+
+                        let user = userEntity({
+                            item_order: tmprow,
+                            status_item_id: enums.STATUS_ITEM.PENDIENTE,
+                            maker: req.body.email,
+                            create_date: datetmp,
+                            modification_date: 0,
+                            email: req.body.email,
+                            password: tmppwd,
+                            name: '',
+                            lastname: '',
+                            lastname2: '',
+                            alternatemail: '',
+                            birthday: 0,
+                            rfc: '',
+                            curp: '',
+                            genre: 0,
+                            zipcode: '',
+                            home_reference: '',
+                            address: '',
+                            apartment_number_int: '',
+                            apartment_number_ext: '',
+                            telephone_number: '',
+                            telephone_number2: '',
+                            rol_id: enums.ROLES.DEMO
+                        });
+
+                        user.save(function(error) {
+                            if (error) {
+                                responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', error.message, '', '');
+
+                            } else {
+                                email.init(req.body.email);
+                                responseutil.Send(res, enums.HTTP_STATUS_CODE.OK, JSON.stringify(user), 'Item creado con exito', '', '');
+                            }
+                        });
+                        // end
                     });
                 }
-
             });
         }
     },
-    GetAll: function (req, res, next) {
-       var t =  usermodel.asyncGetAll(req, res, next).then(x => {
-            responseutil.Send(res, 200, JSON.stringify(x), '', '', '');
+    GetAll: function(req, res, next) {
+
+        userModel.asyncGetAll().then(resolve => {
+            responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
+            next();
+        }, reject => {
+            responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
+            next();
         });
     },
-    Update: function (req, res, next) {
+    Update: function(req, res, next) {
         const id = req.params.id;
         if (id) {
             // start
@@ -125,10 +154,10 @@ module.exports = {
                 'telephone_number2': req.body.telephone_number2
             };
             // end
-            usermodel.asyncSet(objUser).then(x => {
-                if(x == enums.STATUS_ITEM.OK){
+            userModel.asyncSet(objUser).then(x => {
+                if (x == enums.STATUS_ITEM.OK) {
                     responseutil.Send(res, 200, JSON.stringify(objUser), 'OK', '', '');
-                }else{
+                } else {
                     responseutil.Send(res, 400, '', 'Error', '', '');
                 }
             });
@@ -136,18 +165,21 @@ module.exports = {
             res.status(400).send('id user required');
         }
     },
-    UploadImg: function (req, res, next) {
+    UploadImg: function(req, res, next) {
 
-        // usermodel.asyncUploadImgDropbox();
-        //usermodel.asynUploadImg();
+        // userModel.asyncUploadImgDropbox();
+        //userModel.asynUploadImg();
     },
-    CheckExist: function (req, res, next) {
+    CheckExist: function(req, res, next) {
         let pwd = req.body.password;
         pwd = crypto.encrypt(pwd);
 
-        const objuser = { 'email': req.body.email, 'password': pwd };
+        const objuser = {
+            'email': req.body.email,
+            'password': pwd
+        };
 
-        usermodel.asyncCheckExist(objuser).then(x => {
+        userModel.asyncCheckExist(objuser).then(x => {
             if (x == enums.STATUS_ITEM.OK) {
                 let token = jwt.sign(objuser, SuperSecret.NIP, {
                     expiresIn: '360h'

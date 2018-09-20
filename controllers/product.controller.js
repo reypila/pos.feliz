@@ -4,7 +4,7 @@ const responseutil = require('../util/response.util');
 const productModel = require('../models/products.model');
 
 module.exports = {
-	Delete: function (req, res, next) {
+	Delete: function(req, res, next) {
 
 		if (!enums.CheckExist(req.params.id))
 			responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required body parameters not set id', '', '', '');
@@ -15,7 +15,7 @@ module.exports = {
 			id: req.params.id,
 			modification_date: datetmp
 		}
-		
+
 		productModel.asyncDelete(productObject).then(resolve => {
 			responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
 			next();
@@ -23,9 +23,9 @@ module.exports = {
 			responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
 			next();
 		});
-		
+
 	},
-	Patch: function (req, res, next) {
+	Patch: function(req, res, next) {
 
 		if (!enums.CheckExist(req.params.id) ||
 			!enums.CheckExist(req.body.item_order) ||
@@ -72,7 +72,7 @@ module.exports = {
 			next();
 		});
 	},
-	GetAll: function (req, res, next) {
+	GetAll: function(req, res, next) {
 		productModel.asyncGetAll().then(resolve => {
 			responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
 			next();
@@ -81,7 +81,7 @@ module.exports = {
 			next();
 		});
 	},
-	Get: function (req, res, next) {
+	Get: function(req, res, next) {
 
 		const objcatalogdetails = {
 			id: req.params.id
@@ -97,7 +97,7 @@ module.exports = {
 
 		});
 	},
-	Create: function (req, res, next) {
+	Create: function(req, res, next) {
 		// validate must arguments
 		if (!enums.CheckExist(req.body.measurement_unit_id) ||
 			!enums.CheckExist(req.body.price) ||

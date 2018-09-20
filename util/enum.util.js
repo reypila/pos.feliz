@@ -25,7 +25,8 @@ const CATALOGS = {
 const ROLES = {
     "ADMIN": "1",
     "VENDEDOR": "2",
-    "AUDITORIA": "3"
+    "AUDITORIA": "3",
+    "DEMO": "4"
 }
 const STATUS_ITEM = {
     "INEXISTENTE": -4,
@@ -36,7 +37,7 @@ const STATUS_ITEM = {
     "PENDIENTE": 2,
     "RECOVERYPASSWORD": 3,
     "ACTIVO": 4,
-    "SUCCESS":5
+    "SUCCESS": 5
 }
 
 const HTTP_STATUS_CODE = {
@@ -65,14 +66,14 @@ const GENRE = {
     "FEMALE": 2
 }
 
-const DateTimeNowToMilliSeconds = function () {
+const DateTimeNowToMilliSeconds = function() {
     var d = new Date();
     var n = d.getTime();
     return n;
 }
 
 const CheckExist = function function_name(argument) {
-    if (typeof argument === 'undefined' || argument == null) {
+    if (typeof argument === 'undefined' || argument == null || argument == 'undefined') {
         return false;
     } else {
         return true;
@@ -80,6 +81,7 @@ const CheckExist = function function_name(argument) {
 }
 
 module.exports = {
+    ROLES,
     MEASUREMENT_UNIT,
     HTTP_STATUS_CODE,
     CheckExist,
