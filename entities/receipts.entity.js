@@ -22,7 +22,7 @@ let objReceipt = new Schema({
         type: Number,
         required: true
     },
-    userid: {
+    client_id: {
         type: Schema.Types.ObjectId,
         ref: 'users'
     },

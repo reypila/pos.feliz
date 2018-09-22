@@ -13,7 +13,7 @@ let objUser = new Schema({
     lastname: String,
     lastname2: String,
     alternatemail: String,
-    birthday: Date,
+    birthday: Number,
     rfc: String,
     curp: String,
     genre_id: Number,

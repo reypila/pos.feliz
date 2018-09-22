@@ -11,8 +11,75 @@ const responseutil = require('../util/response.util');
 const jwt = require('jsonwebtoken');
 const SuperSecret = require('../config/SuperSecret');
 
-// => users
 module.exports = {
+    Delete: function(req, res, next) {
+        if (!enums.CheckExist(req.params.id)) {
+            responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required  parameters not set id', '', '', '');
+            next();
+        }
+
+        let datetmp = enums.DateTimeNowToMilliSeconds();
+
+        const objUser = {
+            _id: req.params.id,
+            modification_date: datetmp,
+            status_item_id: enums.STATUS_ITEM.DELETE
+        }
+
+        userModel.asyncDelete(objUser).then(resolve => {
+            responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
+            next();
+        }, reject => {
+            responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
+            next();
+        });
+
+
+    },
+    Patch: function(req, res, next) {
+
+        if (!enums.CheckExist(req.params.id)) {
+            responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required  parameters not set id', '', '', '');
+            next();
+        }
+
+        // start
+        let datetmp = enums.DateTimeNowToMilliSeconds();
+
+        const objUser = {
+            _id: req.params.id,
+            item_order: req.body.item_order,
+            status_item_id: req.body.status_item_id,
+            modification_date: datetmp,
+            email: req.body.email,
+            password: req.body.password,
+            name: req.body.name,
+            lastname: req.body.lastname,
+            lastname2: req.body.lastname2,
+            alternatemail: req.body.alternatemail,
+            birthday: req.body.birthday,
+            rfc: req.body.rfc,
+            curp: req.body.curp,
+            genre: req.body.genre,
+            zipcode: req.body.zipcode,
+            home_reference: req.body.home_reference,
+            address: req.body.address,
+            apartment_number_int: req.body.apartment_number_int,
+            apartment_number_ext: req.body.apartment_number_ext,
+            telephone_number: req.body.telephone_number,
+            telephone_number2: req.body.telephone_number2,
+            rol_id: req.body.rol_id
+        };
+        // end
+        userModel.asyncPatch(objUser).then(resolve => {
+            responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
+            next();
+        }, reject => {
+            responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
+            next();
+        });
+
+    },
     Get: function(req, res, next) {
 
         let objUser = {};
@@ -129,47 +196,6 @@ module.exports = {
             next();
         });
     },
-    Update: function(req, res, next) {
-        const id = req.params.id;
-        if (id) {
-            // start
-            const objUser = {
-                '_id': id,
-                'status_item': req.body.status_item,
-                'maker': req.body.maker,
-                'modification_date': new Date(),
-                'password': req.body.password,
-                'name': req.body.name,
-                'lastname': req.body.lastname,
-                'lastname2': req.body.lastname,
-                'alternatemail': req.body.alternatemail,
-                'birthday': req.body.birthday,
-                'rfc': req.body.rfc,
-                'curp': req.body.curp,
-                'genre': req.body.genre == enums.GENRE.FEMALE || req.body.genre == enums.GENRE.MALE ? req.body.genre : enums.GENRE.NEUTRAL,
-                'zipcode': req.body.zipcode,
-                'home_reference': req.body.home_reference,
-                'apartment_number': req.body.apartment_number,
-                'telephone_number': req.body.telephone_number,
-                'telephone_number2': req.body.telephone_number2
-            };
-            // end
-            userModel.asyncSet(objUser).then(x => {
-                if (x == enums.STATUS_ITEM.OK) {
-                    responseutil.Send(res, 200, JSON.stringify(objUser), 'OK', '', '');
-                } else {
-                    responseutil.Send(res, 400, '', 'Error', '', '');
-                }
-            });
-        } else {
-            res.status(400).send('id user required');
-        }
-    },
-    UploadImg: function(req, res, next) {
-
-        // userModel.asyncUploadImgDropbox();
-        //userModel.asynUploadImg();
-    },
     CheckExist: function(req, res, next) {
         let pwd = req.body.password;
         pwd = crypto.encrypt(pwd);
@@ -200,6 +226,4 @@ module.exports = {
             }
         })
     }
-
-
 }

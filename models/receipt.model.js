@@ -1,4 +1,4 @@
-const productEntity = require('../entities/products.entity');
+const objectEntity = require('../entities/receipts.entity');
 // const rowsEntity = require('../entities/catalogdetails.entity');
 const enums = require('../util/enum.util');
 // const responseutil = require('../util/response.util')
@@ -9,7 +9,7 @@ module.exports = {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 				// start
-				let query = productEntity.findOneAndUpdate({
+				let query = objectEntity.findOneAndUpdate({
 					'_id': productObject.id
 				}, {
 					status_item_id: enums.STATUS_ITEM.DELETE,
@@ -53,7 +53,7 @@ module.exports = {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 
-				let query = productEntity.findOneAndUpdate({
+				let query = objectEntity.findOneAndUpdate({
 					'_id': productObject.id
 				}, {
 					item_order: productObject.item_order,
@@ -109,7 +109,7 @@ module.exports = {
 	asyncGetAll: function() {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
-				const query = productEntity.find({});
+				const query = objectEntity.find({});
 				query.exec(function(error, docs) {
 					if (error) {
 						reject({
@@ -157,11 +157,11 @@ module.exports = {
 				let query = {};
 
 				if (enums.CheckExist(productObject.id)) {
-					query = productEntity.find({
+					query = objectEntity.find({
 						'_id': productObject.id
 					});
 				} else {
-					query = productEntity.find({
+					query = objectEntity.find({
 						'name': productObject.name,
 						'brand': productObject.brand
 					});
@@ -213,7 +213,7 @@ module.exports = {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 				// get max value id_table
-				const querygetmax = productEntity.findOne({
+				const querygetmax = objectEntity.findOne({
 					status_item_id: enums.STATUS_ITEM.ACTIVO
 				}).sort('-item_order');
 
@@ -235,7 +235,7 @@ module.exports = {
 						tmprow = parseInt(docgetmax.item_order) + 1;
 					}
 
-					let product = productEntity({
+					let product = objectEntity({
 						item_order: tmprow,
 						status_item_id: enums.STATUS_ITEM.ACTIVO,
 						maker: productObject.maker,

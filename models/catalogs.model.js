@@ -15,6 +15,8 @@ module.exports = {
 					status_item: false,
 					modification_date: datetmp,
 
+				}, {
+					new: true
 				}, function(error, res) {
 					if (error) {
 						reject({
@@ -96,6 +98,8 @@ module.exports = {
 					column18: requestObject.column18,
 					column19: requestObject.column19,
 					column20: requestObject.column20
+				}, {
+					new: true
 				}, function(error, res) {
 					if (error) {
 						reject({
@@ -226,6 +230,8 @@ module.exports = {
 					status_item: false,
 					modification_date: datetmp,
 
+				}, {
+					new: true
 				}, function(error, res) {
 					if (error) {
 						reject({
@@ -262,6 +268,8 @@ module.exports = {
 					'modification_date': datetmp,
 					'table_name': catalogObj.table_name,
 					'row_order': catalogObj.row_order
+				}, {
+					new: true
 				}, function(error, res) {
 					if (error) {
 						reject({
