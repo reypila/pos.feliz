@@ -1,19 +1,17 @@
-const objectEntity = require('../entities/receipts.entity');
-// const rowsEntity = require('../entities/catalogdetails.entity');
+const receiptEntity = require('../entities/receipts.entity');
 const enums = require('../util/enum.util');
-// const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
-	asyncDelete: function(productObject) {
+	asyncDelete: function(receiptObject) {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 				// start
-				let query = objectEntity.findOneAndUpdate({
-					'_id': productObject.id
+				let query = receiptEntity.findOneAndUpdate({
+					'_id': receiptObject.id
 				}, {
 					status_item_id: enums.STATUS_ITEM.DELETE,
-					modification_date: productObject.modification_date
+					modification_date: receiptObject.modification_date
 				}, {
 					new: true
 				}, function(error, docs) {
@@ -49,28 +47,21 @@ module.exports = {
 		});
 		return promesa;
 	},
-	asyncPatch: function(productObject) {
+	asyncPatch: function(receiptObject) {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 
-				let query = objectEntity.findOneAndUpdate({
-					'_id': productObject.id
+				let query = receiptEntity.findOneAndUpdate({
+					'_id': receiptObject.id
 				}, {
-					item_order: productObject.item_order,
-					status_item_id: productObject.status_item_id,
-					maker: productObject.maker,
-					modification_date: productObject.modification_date,
-					name: productObject.name,
-					barcode: productObject.barcode,
-					weight: productObject.weight,
-					size: productObject.size,
-					stock: productObject.stock,
-					brand: productObject.brand,
-					cost: productObject.cost,
-					price: productObject.price,
-					pick_url: productObject.pick_url,
-					description: productObject.description,
-					measurement_unit_id: productObject.measurement_unit_id
+					item_order: receiptObject.item_order,
+					status_item_id: receiptObject.status_item_id,
+					maker: receiptObject.maker,
+					modification_date: receiptObject.modification_date,
+					client_id: receiptObject.client_id,
+					subtotal: receiptObject.subtotal,
+					total: receiptObject.total,
+					voided: receiptObject.voided // anulado
 				}, {
 					new: true
 				}, function(error, docs) {
@@ -109,7 +100,7 @@ module.exports = {
 	asyncGetAll: function() {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
-				const query = objectEntity.find({});
+				const query = receiptEntity.find({});
 				query.exec(function(error, docs) {
 					if (error) {
 						reject({
@@ -151,19 +142,18 @@ module.exports = {
 		});
 		return promesa;
 	},
-	asyncGet: function(productObject) {
+	asyncGet: function(receiptObject) {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 				let query = {};
 
-				if (enums.CheckExist(productObject.id)) {
-					query = objectEntity.find({
-						'_id': productObject.id
+				if (enums.CheckExist(receiptObject.id)) {
+					query = receiptEntity.find({
+						'_id': receiptObject.id
 					});
 				} else {
-					query = objectEntity.find({
-						'name': productObject.name,
-						'brand': productObject.brand
+					query = receiptEntity.find({
+						'client_id': receiptObject.client_id
 					});
 				}
 
@@ -179,18 +169,11 @@ module.exports = {
 						});
 					}
 
-					docs.length >= 1 ? resolve({
-						statusItem: enums.STATUS_ITEM.EXISTE,
+					resolve({
+						statusItem: enums.STATUS_ITEM.SUCCESS,
 						statusCode: enums.HTTP_STATUS_CODE.OK,
-						result: JSON.stringify(docs, null),
-						message: 'Item Existe',
-						href: '',
-						function: ''
-					}) : resolve({
-						statusItem: enums.STATUS_ITEM.INEXISTENTE,
-						statusCode: enums.HTTP_STATUS_CODE.NO_CONTENT,
-						result: '',
-						message: 'Item No Existe',
+						result: JSON.stringify(docs),
+						message: '',
 						href: '',
 						function: ''
 					});
@@ -209,13 +192,11 @@ module.exports = {
 
 		return promesa;
 	},
-	asyncCreate: function(productObject) {
+	asyncCreate: function(receiptObject) {
 		let promesa = new Promise(function(resolve, reject) {
 			try {
 				// get max value id_table
-				const querygetmax = objectEntity.findOne({
-					status_item_id: enums.STATUS_ITEM.ACTIVO
-				}).sort('-item_order');
+				const querygetmax = receiptEntity.findOne({}).sort('-item_order');
 
 				querygetmax.exec(function(error, docgetmax) {
 					if (error) {
@@ -235,26 +216,19 @@ module.exports = {
 						tmprow = parseInt(docgetmax.item_order) + 1;
 					}
 
-					let product = objectEntity({
+					let receipt = receiptEntity({
 						item_order: tmprow,
 						status_item_id: enums.STATUS_ITEM.ACTIVO,
-						maker: productObject.maker,
-						create_date: productObject.create_date,
-						modification_date: productObject.modification_date,
-						name: productObject.name,
-						barcode: productObject.barcode,
-						weight: productObject.weight,
-						size: productObject.size,
-						stock: productObject.stock,
-						brand: productObject.brand,
-						cost: productObject.cost,
-						price: productObject.price,
-						pick_url: productObject.pick_url,
-						description: productObject.description,
-						measurement_unit_id: productObject.measurement_unit_id
+						maker: receiptObject.maker,
+						create_date: receiptObject.create_date,
+						modification_date: receiptObject.modification_date,
+						client_id: receipt.client_id,
+						subtotal: receipt.subtotal,
+						total: receipt.total,
+						voided: receipt.voided // anulado
 					});
 
-					product.save(function(error) {
+					receipt.save(function(error) {
 						if (error) {
 							reject({
 								statusItem: enums.STATUS_ITEM.INCIDENCIA,
@@ -268,7 +242,7 @@ module.exports = {
 							resolve({
 								statusItem: enums.STATUS_ITEM.ACTIVO,
 								statusCode: enums.HTTP_STATUS_CODE.OK,
-								result: JSON.stringify(product, null),
+								result: JSON.stringify(receipt),
 								message: '',
 								href: '',
 								function: ''

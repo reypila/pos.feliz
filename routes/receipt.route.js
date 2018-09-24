@@ -1,9 +1,9 @@
-const ctrlProduct = require('../controllers/receipt.controller');
+const ctrlReceipt = require('../controllers/receipt.controller');
 
 module.exports = function(app) {
-    app.delete('/api/receipts/:id', ctrlProduct.Delete); 
-	app.patch('/api/receipts/:id', ctrlProduct.Patch);
-    app.get('/api/receipts/:id', ctrlProduct.Get); 
-    app.get('/api/receipts', ctrlProduct.GetAll);
-    app.post('/api/receipts', ctrlProduct.Create);
+    app.delete('/api/receipts/:id', ctrlReceipt.Delete); 
+	app.patch('/api/receipts/:id', ctrlReceipt.Patch);
+    app.get('/api/receipts/:id', ctrlReceipt.Get); 
+    app.get('/api/receipts', ctrlReceipt.GetAll);
+    app.post('/api/receipts', ctrlReceipt.Create);
 }
