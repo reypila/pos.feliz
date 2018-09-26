@@ -4,7 +4,10 @@ const responseutil = require('../util/response.util');
 const receiptModel = require('../models/receipt.model');
 
 module.exports = {
-	Delete: function(req, res, next) {
+	DataCreate: function (req,res, next) {
+		
+	}
+	,Delete: function(req, res, next) {
 
 		if (!enums.CheckExist(req.params.id))
 			responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required body parameters not set id', '', '', '');

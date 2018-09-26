@@ -22,6 +22,11 @@ let objReceiptDetail = new Schema({
         type: Number,
         required: true
     },
+    order: Number,
+    receipt_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'receipts'
+    },
     productid: {
         type: Schema.Types.ObjectId,
         ref: 'products'

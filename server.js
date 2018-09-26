@@ -15,6 +15,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // Routes
+app.get('/',function(req,res){
+     res.sendFile('/assets/index.html');
+});
  routes = require('./routes/product.route')(app);
  routes = require('./routes/catalog.route')(app);
  routes = require('./routes/user.route')(app);
