@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 const SuperSecret = require('./config/SuperSecret');
 const configdb = require('./config/mongoose');
-
+const jwt    = require('jsonwebtoken');
 // development 8084
 // app.set('port', (process.env.PORT || 8084));
 // production 5000
@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 app.get('/',function(req,res){
      res.sendFile('/assets/index.html');
 });
+
  routes = require('./routes/product.route')(app);
  routes = require('./routes/catalog.route')(app);
  routes = require('./routes/user.route')(app);
