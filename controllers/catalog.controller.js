@@ -229,12 +229,8 @@ module.exports = {
         });
     },
     GetAll: function(req, res, next) {
-        modelCatalog.asyncGetAll().then(x => {
-            if (x.statusCode == enums.STATUS_ITEM.ERROR) {
-                responseutil.Send(res, 400, '', x.message, '', '', '');
-            }
-            responseutil.Send(res, 200, x, '', '', '', '');
-
+        modelCatalog.asyncGetAll().then(resolve => {
+            responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
         }, reject => {
             responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
         });
@@ -250,7 +246,7 @@ module.exports = {
             table_name: tmp_table_name
         };
 
-        modelCatalog.asyncCreate(catalogObj).then(revolve => {
+        modelCatalog.asyncCreate(catalogObj).then(resolve => {
             console.dir(resolve);
             responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
 

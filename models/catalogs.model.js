@@ -136,7 +136,7 @@ module.exports = {
 
                 const query = rowsEntity.find({
                     '_id': requestObject.id
-                });
+                }).populate('catalogsid');
 
                 query.exec(function(error, docs) {
                     if (error) {
@@ -335,19 +335,38 @@ module.exports = {
             try {
                 const query = catalogEntity.find({});
                 query.exec(function(error, docs) {
+                    console.dir(docs);
+
                     if (error) {
                         reject({
-                            statusCode: enums.STATUS_ITEM.ERROR,
-                            message: error.message
+                            statusItem: enums.STATUS_ITEM.INCIDENCIA,
+                            statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+                            result: '',
+                            message: error.message,
+                            href: '',
+                            function: ''
                         });
                     }
-                    docs.length >= 1 ? resolve(docs) : resolve(0);
+                    resolve({
+                        statusItem: enums.STATUS_ITEM.SUCCESS,
+                        statusCode: enums.HTTP_STATUS_CODE.OK,
+                        result: JSON.stringify(docs),
+                        message: '',
+                        href: '',
+                        function: ''
+                    });
                 });
             } catch (error) {
+
                 reject({
-                    statusCode: enums.STATUS_ITEM.ERROR,
-                    message: error.message
+                    statusItem: enums.STATUS_ITEM.INCIDENCIA,
+                    statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+                    result: '',
+                    message: error.message,
+                    href: '',
+                    function: ''
                 });
+
             }
         });
 
@@ -377,9 +396,9 @@ module.exports = {
                     if (docs.length >= 1) {
                         resolve({
                             statusItem: enums.STATUS_ITEM.EXISTE,
-                            statusCode: enums.HTTP_STATUS_CODE.OK,
+                            statusCode: enums.HTTP_STATUS_CODE.CONFLICT,
                             result: JSON.stringify(docs),
-                            message: '',
+                            message: `El item ${catalogObj.table_name} ya existe`,
                             href: '',
                             function: ''
                         });
