@@ -25,7 +25,9 @@ let objCatalogs = new Schema({
     row_order: {
         type: Number,
         required: true
-    }
+    },
+    // rows: [{ type: Schema.Types.ObjectId, ref: 'catalogsdetails'}]
+    //  queda pendiente como realizar esta accion
 });
 
 let catalogs = mongoose.model('catalogs', objCatalogs);

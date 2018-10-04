@@ -83,15 +83,11 @@ module.exports = {
             id: req.params.catalogid
         };
 
-        modelCatalog.asynDataGet(requestObject).then(result => {
-            if (result.statusCode == enums.STATUS_ITEM.ERROR) {
-                responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', result.message, '', '', '');
-            } else {
-                responseutil.Send(res, enums.STATUS_ITEM.OK, result, '', '');
-            }
-            next();
+        modelCatalog.asynDataGet(requestObject).then(resolve => {
+            responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
         }, reject => {
             responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+            next();
         });
     },
     DataAdd: function(req, res, next) {
@@ -99,7 +95,7 @@ module.exports = {
         if (!enums.CheckExist(req.params.catalogid) ||
             !enums.CheckExist(req.body.status_item) ||
             !enums.CheckExist(req.body.row_order)) {
-            responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required property not set id, catalogid, status_item, row_order', '', '', '');
+            responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', 'Required property not set id, catalogid, status_item, row_order', '', '', '');
             next();
         }
 
@@ -132,13 +128,9 @@ module.exports = {
         };
 
         modelCatalog.asyncDataAdd(requestObject).then(resolve => {
-            if (resolve.statusCode == enums.STATUS_ITEM.ERROR) {
-                responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', resolve.message, '', '', '');
-            } else {
-                responseutil.Send(res, enums.STATUS_ITEM.OK, resolve, '', '');
-            }
+            responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
         }, reject => {
-            responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+            responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
             next();
         });
     },
@@ -247,7 +239,7 @@ module.exports = {
         };
 
         modelCatalog.asyncCreate(catalogObj).then(resolve => {
-            console.dir(resolve);
+           
             responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
 
         }, reject => {

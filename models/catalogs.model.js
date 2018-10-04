@@ -196,20 +196,56 @@ module.exports = {
                     column20: requestObject.column20
                 });
 
-                console.log('=====================================');
-                console.dir(rowitem);
-
-
-                rowitem.save(function(err) {
-                    if (err) {
-                        resolve({
-                            statusCode: 400,
-                            message: err.message
+                rowitem.save(function(error) {
+                    if (error) {
+                        reject({
+                            statusItem: enums.STATUS_ITEM.INCIDENCIA,
+                            statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+                            result: '',
+                            message: error.message,
+                            href: '',
+                            function: ''
                         });
+
                     } else {
-                        resolve(JSON.stringify(rowitem, null));
+
+                        resolve({
+                            statusItem: enums.STATUS_ITEM.SUCCESS,
+                            statusCode: enums.HTTP_STATUS_CODE.OK,
+                            result: JSON.stringify(rowitem),
+                            message: '',
+                            href: '',
+                            function: ''
+                        });
+
+                        // // Queda pendiente como lograr agregar el child al padre
+                        // let query = catalogEntity.findOneAndUpdate({
+                        //     '_id': requestObject.catalogsid
+                        // }, {
+                        //     $push: {
+                        //         rows: rowitem
+                        //     }
+                        // }, {
+                        //     new: true
+                        // }, function(error, res) {
+                        //     // console.dir(error)
+                        //     // console.log('separate');
+                        //     // console.dir(res);
+                        //     if (error) {
+                        //         reject({
+                        //             statusCode: enums.STATUS_ITEM.ERROR,
+                        //             message: error.message
+                        //         });
+                        //     } else {
+                        //         resolve(JSON.stringify(res, null));
+                        //     }
+                        // });
+
                     }
                 });
+                // set collection
+
+                // end collection
 
             } catch (error) {
                 reject({
@@ -449,7 +485,7 @@ module.exports = {
                                         function: ''
                                     });
                                 } else {
-                                    console.dir(catalog);
+                                    // console.dir(catalog);
                                     resolve({
                                         statusItem: enums.STATUS_ITEM.SUCCESS,
                                         statusCode: enums.HTTP_STATUS_CODE.OK,
