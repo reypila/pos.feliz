@@ -34,14 +34,21 @@ let objProduct = new Schema({
     cost: Number,
     price: Number,
     pick_url: String,
+    // catalogsdetails get departments avaliables 
+
     description: {
         type: String,
         required: false
     },
-    measurement_unit_id: {
-        type: String,
-        required: true
+    department: {
+        type: Schema.Types.ObjectId,
+        ref: 'catalogsdetails'
     },
+    measurement_unit_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'catalogsdetails',
+        required: true
+    }
 });
 
 const Product = mongoose.model('products', objProduct);

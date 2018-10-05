@@ -4,6 +4,35 @@ const responseutil = require('../util/response.util')
 const Promise = require('promise');
 
 module.exports = {
+    asyncLogin: function(objuser) {
+        let promesa = new Promise(function(resolve, reject) {
+            let query = userModel({
+                email: objuser.email,
+                password: objuser.password
+            }).exec(function(error, document) {
+                if (error) {
+                    reject({
+                        statusItem: enums.STATUS_ITEM.INCIDENCIA,
+                        statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+                        result: '',
+                        message: error.message,
+                        href: '',
+                        function: ''
+                    });
+
+                    resolve({
+                        statusItem: enums.STATUS_ITEM.SUCCESS,
+                        statusCode: enums.HTTP_STATUS_CODE.OK,
+                        result: JSON.stringify(docs),
+                        message: '',
+                        href: '',
+                        function: ''
+                    });
+                }
+            });
+        });
+        return promesa;
+    },
     asyncDelete: function(objuser) {
         let promesa = new Promise(function(resolve, reject) {
             try {
