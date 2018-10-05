@@ -224,7 +224,8 @@ module.exports = {
         modelCatalog.asyncGetAll().then(resolve => {
             responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
         }, reject => {
-            responseutil.Send(res, reject.statusCode, '', reject.message, '', '', '');
+            responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
+            next();
         });
     },
     Create: function(req, res, next) {
