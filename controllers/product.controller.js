@@ -106,7 +106,7 @@ module.exports = {
 			!enums.CheckExist(req.body.stock) ||
 			!enums.CheckExist(req.body.name) ||
 			!enums.CheckExist(req.body.maker)) {
-			responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required body parameters not set maker, name, stock, brand, cost, price, measurement_unit_id', '', '', '');
+			responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', 'Required body parameters not set maker, name, stock, brand, cost, price, measurement_unit_id', '', '', '');
 		}
 
 		const tmp_product_name = req.body.name.toUpperCase();

@@ -28,7 +28,8 @@ let objReceipt = new Schema({
     },
     subtotal: Number,
     total: Number,
-    voided: Number // anulado 
+    voided: Number, // anulado 
+    folio: String
 });
 
 const Receipt = mongoose.model('receipts', objReceipt);

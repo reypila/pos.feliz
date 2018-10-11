@@ -225,7 +225,8 @@ module.exports = {
 						client_id: receipt.client_id,
 						subtotal: receipt.subtotal,
 						total: receipt.total,
-						voided: receipt.voided // anulado
+						voided: receipt.voided, // anulado
+						product_id: receipt.product_id
 					});
 
 					receipt.save(function(error) {

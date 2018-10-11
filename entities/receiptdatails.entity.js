@@ -34,7 +34,7 @@ let objReceiptDetail = new Schema({
     amount: Number,
     cost: Number,
     price: Number,
-    total: Number
+    total_item: Number
 });
 
 const objReceiptDetail = mongoose.model('receiptdetails', objReceiptDetail);

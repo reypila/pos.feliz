@@ -1,6 +1,29 @@
 /**
  * Created by developer on 6/28/2017.
  */
+var fetch = require('isomorphic-fetch'); // or another library of choice.
+var Dropbox = require('dropbox').Dropbox;
+const DropboxConfig = require('../config/DropboxConfig');
+
+const dbxTest = function() {
+    console.log('start');
+    
+    var dbx = new Dropbox({
+        accessToken: DropboxConfig.accessToken,
+        fetch: fetch
+    });
+
+    dbx.filesListFolder({
+            path: '/assets'
+        })
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+}
 
 const MEASUREMENT_UNIT = {
     "H87": "Pieza (Múltiplos / Fracciones / Decimales)",
@@ -72,7 +95,8 @@ const DateTimeNowToMilliSeconds = function() {
     return n;
 }
 
-const CheckExist = function function_name(argument) {
+//const CheckExist = function function_name(argument) {
+const CheckExist = function(argument) {
     if (typeof argument === 'undefined' || argument == null || argument == 'undefined') {
         return false;
     } else {
@@ -81,6 +105,7 @@ const CheckExist = function function_name(argument) {
 }
 
 module.exports = {
+    dbxTest,
     ROLES,
     MEASUREMENT_UNIT,
     HTTP_STATUS_CODE,

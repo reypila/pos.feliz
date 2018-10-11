@@ -162,7 +162,7 @@ module.exports = {
 					});
 				} else {
 					query = productEntity.find({
-						'name': productObject.name,
+						'name': productObject.name.to,
 						'brand': productObject.brand
 					});
 				}

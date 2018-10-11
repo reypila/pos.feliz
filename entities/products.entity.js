@@ -33,7 +33,7 @@ let objProduct = new Schema({
     brand: String,
     cost: Number,
     price: Number,
-    pick_url: String,
+    // pick_url: String,
     // catalogsdetails get departments avaliables 
 
     description: {
@@ -48,6 +48,12 @@ let objProduct = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'catalogsdetails',
         required: true
+    },
+    images_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'catalogsdetails',
+        required: false
+        // default: 'https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw_400x400.jpg'
     }
 });
 

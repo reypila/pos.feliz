@@ -8,8 +8,7 @@ let objPaymentMethod = new Schema({
     create_date: { type: Date, required: true },
     modification_date: { type: Date, required: true },
     descripcion: { type: String, required: true },
-    clave: { type: String, required: true },
-    descripcion: { type: String, required: true }
+    clave: { type: String, required: true }
 });
 
 const PaymentMethod = mongoose.model('paymentmethod', objPaymentMethod);
