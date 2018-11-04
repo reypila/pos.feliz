@@ -20,6 +20,8 @@ app.get('/', function(req, res) {
     res.sendFile('/assets/index.html');
 });
 
+routes = require('./routes/inventory.route')(app);
+// before
 routes = require('./routes/receipt.route')(app);
 routes = require('./routes/product.route')(app);
 routes = require('./routes/catalog.route')(app);
@@ -30,7 +32,10 @@ mongoose.disconnect();
 //     console.log('connection success');
 // });
 
-mongoose.connect(configdb.url, {
+mongoose.connect(configdb.url,  
+{
+	useNewUrlParser: true,
+	useCreateIndex: true,
     reconnectTries: Number.MAX_VALUE
 }).then(x => {
     console.log('connection success');
