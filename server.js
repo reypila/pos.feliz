@@ -58,3 +58,5 @@ app.listen(app.get('port'), function() {
 // #20181217.17.23
 // se retoma el proyecto, se pauso debido a cuestiones de creacion de proyecto de renta de consolas
 // 	MAR300DIC
+// #20190115.17.36
+// el proyecto ya crea de forma basica inventario, ventas e inventario
