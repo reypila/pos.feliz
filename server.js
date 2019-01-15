@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
     res.status(200).send({
-        'message': 'hello dude!'
+        'message': 'hello dude!, have new targets'
     });
 });
 
