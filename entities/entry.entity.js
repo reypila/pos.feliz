@@ -29,19 +29,10 @@ let object = new Schema({
         type: String,
         required: true
     },
-    items_current: {
-        type: Number
-    },
     items_entries: {
-        type: Number
-    },
-    items_outgoings: {
-        type: Number
-    },
-    items_stock: {
         type: Number
     }
 });
 
-let inventories = mongoose.model('inventories', object);
-module.exports = inventories;
+let entries = mongoose.model('entries', object);
+module.exports = entries;

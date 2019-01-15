@@ -7,7 +7,7 @@ const DropboxConfig = require('../config/DropboxConfig');
 
 const dbxTest = function() {
     console.log('start');
-    
+
     var dbx = new Dropbox({
         accessToken: DropboxConfig.accessToken,
         fetch: fetch
@@ -52,6 +52,7 @@ const ROLES = {
     "DEMO": "4"
 }
 const STATUS_ITEM = {
+    "SIN_STOCK": -5,
     "INEXISTENTE": -4,
     "INCIDENCIA": -3,
     "INACTIVO": -2,
@@ -104,7 +105,23 @@ const CheckExist = function(argument) {
     }
 }
 
+const IsNumeric = function(argument) {
+    if (typeof argument === 'undefined' || argument == null || argument == 'undefined') {
+        return false;
+    } else {
+        if (Number.isInteger(argument)) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+}
+
+
+
 module.exports = {
+    IsNumeric,
     dbxTest,
     ROLES,
     MEASUREMENT_UNIT,

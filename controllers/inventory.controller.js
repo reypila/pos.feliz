@@ -134,7 +134,7 @@ module.exports = {
     //         next();
     //     });
     // },
-    Delete: function(req, res, next) {
+    Delete: function (req, res, next) {
         if (!enums.CheckExist(req.params.id) ||
             !enums.CheckExist(req.body.maker)) {
             responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', 'Required property not set', '', '', '');
@@ -146,7 +146,7 @@ module.exports = {
 
         const objectDelete = {
             id: req.params.id,
-            maker: req.body.status_item, 
+            maker: req.body.status_item,
             status_item: enums.STATUS_ITEM.INACTIVO,
             modification_date: datetmp
         };
@@ -158,7 +158,7 @@ module.exports = {
             next();
         });
     },
-    Update: function(req, res, next) {
+    Update: function (req, res, next) {
         const objCatalogDetails = {
             _id: req.body._id,
             maker: req.body.maker,
@@ -168,7 +168,7 @@ module.exports = {
 
         model.asyncUpdate(objCatalogDetails).then(x => {
             console.dir(x);
-            (x == 0) ? responseutil.Send(res, 400, '', 'No se logro modificar', '', ''): responseutil.Send(res, 200, '', 'Modificado con exito', '', '');
+            (x == 0) ? responseutil.Send(res, 400, '', 'No se logro modificar', '', '') : responseutil.Send(res, 200, '', 'Modificado con exito', '', '');
             next();
         });
 
@@ -214,7 +214,7 @@ module.exports = {
 
     },
     // GET BY ID
-    Get: function(req, res, next) {
+    Get: function (req, res, next) {
 
         const objectGet = {
             id: req.params.id
@@ -228,7 +228,7 @@ module.exports = {
         });
     },
     // get all inventory
-    GetAll: function(req, res, next) {
+    GetAll: function (req, res, next) {
         modelGeneric.asyncGetAll().then(resolve => {
             responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
         }, reject => {
@@ -237,7 +237,7 @@ module.exports = {
         });
     },
     // create new inventory
-    Create: function(req, res, next) {
+    Create: function (req, res, next) {
 
         if (!enums.CheckExist(req.body.maker) ||
             !enums.CheckExist(req.body.product_code) ||

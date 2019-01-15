@@ -1,20 +1,22 @@
 const Promise = require('promise');
+const entryEntity = require('../entities/entry.entity');
 const inventoryEntity = require('../entities/inventory.entity');
+const inventoryModel = require('../models/inventory.model');
 const enums = require('../util/enum.util');
 const responseutil = require('../util/response.util')
 
 
 module.exports = {
-    asyncDelete: function (objectInventory) {
+    asyncDelete: function (objectEntry) {
         const promesa = new Promise(function (resolve, reject) {
             try {
 
-                let query = inventoryEntity.findOneAndUpdate({
-                    '_id': objectInventory.id
+                let query = entryEntity.findOneAndUpdate({
+                    '_id': objectEntry.id
                 }, {
-                        'status_item': objectInventory.status_item,
-                        'modification_date': objectInventory.modification_date,
-                        'maker': objectInventory.maker
+                        'status_item': objectEntry.status_item,
+                        'modification_date': objectEntry.modification_date,
+                        'maker': objectEntry.maker
                     }, {
                         new: true
                     }, function (error, res) {
@@ -33,7 +35,7 @@ module.exports = {
                             reject({
                                 statusItem: enums.STATUS_ITEM.INCIDENCIA,
                                 statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
-                                result: ` No found item ${objectInventory.id}`,
+                                result: ` No found item ${objectEntry.id}`,
                                 message: '',
                                 href: '',
                                 function: ''
@@ -62,23 +64,23 @@ module.exports = {
         });
         return promesa;
     },
-    asyncPatch: function (objectInventory) {
+    asyncPatch: function (objectEntry) {
         const promesa = new Promise(function (resolve, reject) {
             try {
 
-                let query = inventoryEntity.findOneAndUpdate({
-                    '_id': objectInventory.id
+                let query = entryEntity.findOneAndUpdate({
+                    '_id': objectEntry.id
                 }, {
-                        'status_item': objectInventory.status_item,
-                        'modification_date': objectInventory.modification_date,
-                        'maker': objectInventory.maker,
-                        'product_code': objectInventory.product_code,
-                        'barcode': objectInventory.barcode,
-                        'description': objectInventory.description,
-                        'items_current': objectInventory.items_current,
-                        'items_entries': objectInventory.items_entries,
-                        'items_outgoings': objectInventory.items_outgoings,
-                        'items_stock': objectInventory.items_stock
+                        'status_item': objectEntry.status_item,
+                        'modification_date': objectEntry.modification_date,
+                        'maker': objectEntry.maker,
+                        'product_code': objectEntry.product_code,
+                        'barcode': objectEntry.barcode,
+                        'description': objectEntry.description,
+                        'items_current': objectEntry.items_current,
+                        'items_entries': objectEntry.items_entries,
+                        'items_outgoings': objectEntry.items_outgoings,
+                        'items_stock': objectEntry.items_stock
                     }, {
                         new: true
                     }, function (error, res) {
@@ -97,7 +99,7 @@ module.exports = {
                             reject({
                                 statusItem: enums.STATUS_ITEM.INCIDENCIA,
                                 statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
-                                result: ` No found item ${objectInventory.id}`,
+                                result: ` No found item ${objectEntry.id}`,
                                 message: 'set',
                                 href: '',
                                 function: ''
@@ -126,12 +128,12 @@ module.exports = {
         });
         return promesa;
     },
-    asyncGet: function (objectInventory) {
+    asyncGet: function (objectEntry) {
         let promesa = new Promise(function (resolve, reject) {
             try {
 
-                const query = inventoryEntity.find({
-                    '_id': objectInventory.id
+                const query = entryEntity.find({
+                    '_id': objectEntry.id
                 });
 
                 query.exec(function (error, docs) {
@@ -174,7 +176,7 @@ module.exports = {
     asyncGetAll: function () {
         let promesa = new Promise(function (resolve, reject) {
             try {
-                const query = inventoryEntity.find({});
+                const query = entryEntity.find({});
                 query.exec(function (error, docs) {
 
                     if (error) {
@@ -212,17 +214,19 @@ module.exports = {
 
         return promesa;
     },
-    asyncCreate: function (objectInventory) {
+    asyncCreate: function (objectEntry) {
         let promesa = new Promise(function (resolve, reject) {
 
             try {
-                const query = inventoryEntity.find({
-                    'product_code': objectInventory.product_code,
-                    'barcode': objectInventory.barcode
+
+                // check if exist in Inventary
+                const queryInventoryEntity = inventoryEntity.find({
+                    'product_code': objectEntry.product_code,
+                    'barcode': objectEntry.barcode
                 });
 
-                query.exec(function (error, docs) {
-                    let tmprow = 0;
+                queryInventoryEntity.exec(function (error, docsInventory) {
+
                     if (error) {
                         reject({
                             statusItem: enums.STATUS_ITEM.INCIDENCIA,
@@ -234,23 +238,16 @@ module.exports = {
                         });
                     }
 
-                    if (docs.length >= 1) {
-                        resolve({
-                            statusItem: enums.STATUS_ITEM.EXISTE,
-                            statusCode: enums.HTTP_STATUS_CODE.CONFLICT,
-                            result: JSON.stringify(docs),
-                            message: `* Item  ${objectInventory.table_name} exist`,
-                            href: '',
-                            function: ''
+                    // EXIST INVENTORY 
+                    if (docsInventory.length >= 1) {
+
+
+                        const queryEntryEntity = entryEntity.find({
+                            'product_code': objectEntry.product_code,
+                            'barcode': objectEntry.barcode
                         });
-                    } else {
 
-                        // get max value id_table
-                        const selectItemMAX = inventoryEntity.findOne({
-                            // status_item: true
-                        }).sort('-id_table');
-
-                        selectItemMAX.exec(function (error, itemMAX) {
+                        queryEntryEntity.exec(function (error, docsEntryEntity) {
                             if (error) {
                                 reject({
                                     statusItem: enums.STATUS_ITEM.INCIDENCIA,
@@ -262,25 +259,32 @@ module.exports = {
                                 });
                             }
 
-                            if (enums.CheckExist(itemMAX)) {
-                                tmprow = parseInt(itemMAX.id_table) + 1;
+                            // Save Entry Info
+
+                            let tmp_items_entries = docsEntryEntity._doc;
+
+                            if (!enums.CheckExist(tmp_items_entries)) {
+                                tmp_items_entries = 0;
                             }
 
-                            let objectEntity = inventoryEntity({
-                                status_item: objectInventory.status_item,
-                                create_date: objectInventory.create_date,
-                                modification_date: objectInventory.modification_date,
-                                maker: objectInventory.maker,
-                                product_code: objectInventory.product_code,
-                                barcode: objectInventory.barcode,
-                                description: objectInventory.description,
-                                items_current: objectInventory.items_current,
-                                items_entries: objectInventory.items_entries,
-                                items_outgoings: objectInventory.items_outgoings,
-                                items_stock: objectInventory.items_stock
+                            //tmp_items_entries =  parseFloat(docsEntryEntity._doc.items_entries);
+                            tmp_items_entries = tmp_items_entries + parseFloat(objectEntry.items_entries);
+
+
+                            // create object for new entry 
+                            let objectEntrytEntity = entryEntity({
+                                status_item: objectEntry.status_item,
+                                create_date: objectEntry.create_date,
+                                modification_date: objectEntry.modification_date,
+                                maker: objectEntry.maker,
+                                product_code: objectEntry.product_code,
+                                barcode: objectEntry.barcode,
+                                description: objectEntry.description,
+                                items_entries: tmp_items_entries,
                             });
 
-                            objectEntity.save(function (error) {
+                            // save entry in mongodb
+                            objectEntrytEntity.save(function (error) {
                                 if (error) {
                                     reject({
                                         statusItem: enums.STATUS_ITEM.INCIDENCIA,
@@ -291,24 +295,57 @@ module.exports = {
                                         function: ''
                                     });
                                 } else {
-                                    // console.dir(objectEntity);
-                                    resolve({
-                                        statusItem: enums.STATUS_ITEM.SUCCESS,
-                                        statusCode: enums.HTTP_STATUS_CODE.OK,
-                                        result: JSON.stringify(objectEntity),
-                                        message: 'create',
-                                        href: '',
-                                        function: ''
-                                    });
+
+                                    let tmp_items_stock = docsInventory[0]._doc.items_current + tmp_items_entries - docsInventory[0]._doc.items_outgoings;
+                                    // #TODO
+                                    // resarcir error 2019.01.11.08.07
+                                    let objectInventoryEntity = {
+                                        'id': docsInventory[0]._doc._id,
+                                        'status_item': docsInventory[0]._doc.status_item,
+                                        'modification_date': objectEntry.create_date,
+                                        'maker': objectEntry.maker,
+                                        'product_code': docsInventory[0]._doc.product_code,
+                                        'barcode': docsInventory[0]._doc.barcode,
+                                        'description': docsInventory[0]._doc.description,
+                                        'items_current': docsInventory[0]._doc.items_current,
+                                        'items_entries': tmp_items_entries,
+                                        'items_outgoings': docsInventory[0]._doc.items_outgoings,
+                                        'items_stock': tmp_items_stock
+                                    }
+
+                                    inventoryModel.asyncPatch(objectInventoryEntity).then(function (response) {
+                                        resolve({
+                                            statusItem: enums.STATUS_ITEM.SUCCESS,
+                                            statusCode: enums.HTTP_STATUS_CODE.OK,
+                                            result: JSON.stringify(objectEntrytEntity),
+                                            message: 'create ',
+                                            href: '',
+                                            function: ''
+                                        });
+                                    },
+                                        function (errordata) {
+                                            // start
+                                            reject({
+                                                statusItem: enums.STATUS_ITEM.INCIDENCIA,
+                                                statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,
+                                                result: '',
+                                                message: error.message,
+                                                href: '',
+                                                function: ''
+                                            });
+                                            // end
+                                        });
+
 
                                 }
-                            });
-                        })
+                            })
+
+                        });
+
                     }
-
                 });
-
-            } catch (error) {
+            }
+            catch (error) {
                 reject({
                     statusItem: enums.STATUS_ITEM.INCIDENCIA,
                     statusCode: enums.HTTP_STATUS_CODE.BAD_REQUEST,

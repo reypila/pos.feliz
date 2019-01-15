@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let object = new Schema({
+let obj = new Schema({
     status_item: {
         type: Number,
         require: true
@@ -18,30 +18,35 @@ let object = new Schema({
         type: String,
         required: true
     },
-    no_invoice: {
-         type: String,
-        required: true  
-    },
-    purchase_date:{
-         type: Number,
-        required: true
-    }, 
-    product_code: {
+    invoice_number: {
         type: String,
         required: true
     },
-    barcode: {  
-        type: String
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    quantity: {
+    subtotal: {
         type: Number,
         required: true
     },
+    product_code: {
+        type: Schema.Types.ObjectId,
+        ref: 'inventories'
+    },
+    iva: {
+        type: Number,
+        required: true
+    },
+    total: {
+        type: Number,
+        required: true
+    },
+    client: {
+        type: String,
+        required: true
+    },
+    salesman: {
+        type: String,
+        required: true
+    }
 });
 
-let sales = mongoose.model('sales', object);
+let sales = mongoose.model('sales', obj);
 module.exports = sales;
