@@ -22,11 +22,11 @@ app.use(bodyParser.json());
 
 //let tmpToken = '';
 
-app.get('/', function (req, res) {
-    res.status(200).send({
-        'message': 'Welcome!. to be continue'
-    });
-});
+// app.get('/', function (req, res) {
+//     res.status(200).send({
+//         'message': 'Welcome!. to be continue'
+//     });
+// });
 
 // app.post('/login', ctrlUser.Login);
 // app.use('/api/*', function (req, res, next) {
