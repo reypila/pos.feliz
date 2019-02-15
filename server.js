@@ -1,4 +1,5 @@
 const express = require('express');
+let routes = express.Router();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -10,6 +11,7 @@ const configdb = require('./config/mongoose');
 // const fs = require('fs');
 // const jwt = require('jsonwebtoken');
 const jwtutil = require('./util/jwt.util');
+
 // const bcrypt = require('bcryptjs');
 
 app.set('port', (process.env.PORT || 5000));
