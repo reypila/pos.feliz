@@ -29,29 +29,30 @@ app.get('/', function (req, res) {
 });
 
 app.post('/login', ctrlUser.Login);
-app.use('/api/*', function (req, res, next) {
+// app.use('/api/*', function (req, res, next) {
 
-    var token = req.body.token || req.query.token || req.headers['authorization'];
+//     var token = req.body.token || req.query.token || req.headers['authorization'];
 
-    if (token == 'undefined' || token == "" || token == null || token == 'null') {
-        return res.status(403).send({
-            success: false,
-            message: 'No token provided.'
-        });
+//     if (token == 'undefined' || token == "" || token == null || token == 'null') {
+//         return res.status(403).send({
+//             success: false,
+//             message: 'No token provided.'
+//         });
 
-    }
+//     }
 
-    let flag = jwtutil.verify(token);
+//     let flag = jwtutil.verify(token);
 
-    if (!flag) {
-        return res.json({
-            success: false,
-            message: 'Failed to authenticate token.'
-        });
+//     if (!flag) {
+//         return res.json({
+//             success: false,
+//             message: 'Failed to authenticate token.'
+//         });
      
-    }
-    next(); 
-});
+//     }
+//     next(); 
+// });
+
 routes = require('./routes/user.route')(app);
 routes = require('./routes/inventory.route')(app);
 routes = require('./routes/sale.route')(app);
