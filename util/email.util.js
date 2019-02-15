@@ -1,7 +1,8 @@
 /**
  * Created by Voltron on 12/06/2017.
  */
-const _dataraw = require('../Config/DataRAW');
+// const _dataraw = require(' ../Config/DataRAW');
+const _dataraw = require('./../config/DataRAW');
 const nodemailer = require('nodemailer');
 // const smtpTransport = require('');
 
