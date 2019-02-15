@@ -3,12 +3,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
-const SuperSecret = require('./config/SuperSecret');
+// const SuperSecret = require('./config/SuperSecret');
 const configdb = require('./config/mongoose');
 const ctrlUser = require('./controllers/user.controller');
 // JWT
-const fs = require('fs');
-const jwt = require('jsonwebtoken');
+// const fs = require('fs');
+// const jwt = require('jsonwebtoken');
 const jwtutil = require('./util/jwt.util');
 // const bcrypt = require('bcryptjs');
 
