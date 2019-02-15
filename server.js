@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 // const SuperSecret = require('./config/SuperSecret');
 const configdb = require('./config/mongoose');
-const ctrlUser = require('./controllers/user.controller');
+//const ctrlUser = require('./controllers/user.controller');
 // JWT
 // const fs = require('fs');
 // const jwt = require('jsonwebtoken');
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-let tmpToken = '';
+//let tmpToken = '';
 
 app.get('/', function (req, res) {
     res.status(200).send({
@@ -28,7 +28,7 @@ app.get('/', function (req, res) {
     });
 });
 
-app.post('/login', ctrlUser.Login);
+// app.post('/login', ctrlUser.Login);
 // app.use('/api/*', function (req, res, next) {
 
 //     var token = req.body.token || req.query.token || req.headers['authorization'];
