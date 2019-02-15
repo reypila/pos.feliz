@@ -10,9 +10,39 @@ const email = require('../util/email.util');
 const responseutil = require('../util/response.util');
 const jwt = require('jsonwebtoken');
 const SuperSecret = require('../config/SuperSecret');
+const jwtutil = require('../util/jwt.util');
 
 module.exports = {
-    Delete: function(req, res, next) {
+    Login: function (req, res, next) {
+
+        if (!enums.CheckExist(req.body.email) && !enums.CheckExist(req.body.pwd)) {
+            responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required  parameters not set id', '', '', '');
+            next();
+        }
+
+        let objUser = { email: req.body.email, password: req.body.password };
+
+        userModel.asyncLogin(objUser).then(resolve => {
+            let sOptions = {
+                issuer: "Resource",
+                subject: "iam@user.me",
+                audience: "Client_Identity" // this should be provided by client
+            }
+
+            if (resolve.statusItem == enums.STATUS_ITEM.SUCCESS) {
+                let sign = jwtutil.sign(objUser, sOptions);
+                responseutil.Send(res, resolve.statusCode, sign, resolve.message, resolve.href, resolve.function);
+            } else {
+                responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
+            }
+            next();
+        }, reject => {
+            responseutil.Send(res, reject.statusCode, reject.result, reject.message, reject.href, reject.function);
+            next();
+        });
+
+    },
+    Delete: function (req, res, next) {
         if (!enums.CheckExist(req.params.id)) {
             responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required  parameters not set id', '', '', '');
             next();
@@ -36,7 +66,7 @@ module.exports = {
 
 
     },
-    Patch: function(req, res, next) {
+    Patch: function (req, res, next) {
 
         if (!enums.CheckExist(req.params.id)) {
             responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', 'Required  parameters not set id', '', '', '');
@@ -80,7 +110,7 @@ module.exports = {
         });
 
     },
-    Get: function(req, res, next) {
+    Get: function (req, res, next) {
 
         let objUser = {};
 
@@ -105,7 +135,7 @@ module.exports = {
             next();
         });
     },
-    Create: function(req, res, next) {
+    Create: function (req, res, next) {
 
         if (!enums.CheckExist(req.body.email) ||
             !enums.CheckExist(req.body.password) ||
@@ -120,7 +150,7 @@ module.exports = {
             });
 
 
-            query.exec(function(error, docs) {
+            query.exec(function (error, docs) {
                 if (error) {
                     responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', error.message, '', '');
                 }
@@ -132,7 +162,7 @@ module.exports = {
 
                     const querygetmax = userEntity.findOne().sort('-item_order');
 
-                    querygetmax.exec(function(err, docgetmax) {
+                    querygetmax.exec(function (err, docgetmax) {
                         if (error) {
                             responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', error.message, '', '');
                         }
@@ -171,7 +201,7 @@ module.exports = {
                             rol_id: enums.ROLES.DEMO
                         });
 
-                        user.save(function(error) {
+                        user.save(function (error) {
                             if (error) {
                                 responseutil.Send(res, enums.HTTP_STATUS_CODE.BAD_REQUEST, '', error.message, '', '');
 
@@ -186,7 +216,7 @@ module.exports = {
             });
         }
     },
-    GetAll: function(req, res, next) {
+    GetAll: function (req, res, next) {
 
         userModel.asyncGetAll().then(resolve => {
             responseutil.Send(res, resolve.statusCode, resolve.result, resolve.message, resolve.href, resolve.function);
@@ -196,7 +226,7 @@ module.exports = {
             next();
         });
     },
-    CheckExist: function(req, res, next) {
+    CheckExist: function (req, res, next) {
         let pwd = req.body.password;
         pwd = crypto.encrypt(pwd);
 

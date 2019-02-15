@@ -5,8 +5,12 @@ const mongoose = require('mongoose');
 const app = express();
 const SuperSecret = require('./config/SuperSecret');
 const configdb = require('./config/mongoose');
+const ctrlUser = require('./controllers/user.controller');
+// JWT
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const jwtutil = require('./util/jwt.util');
+// const bcrypt = require('bcryptjs');
 
 app.set('port', (process.env.PORT || 5000));
 // app.set('superSecret', SuperSecret.NIP);
@@ -16,27 +20,44 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get('/', function(req, res) {
+let tmpToken = '';
+
+app.get('/', function (req, res) {
     res.status(200).send({
-        'message': 'hello dude!, have new targets'
+        'message': 'Welcome!. to be continue'
     });
 });
 
+app.post('/login', ctrlUser.Login);
+app.use('/api/*', function (req, res, next) {
+
+    var token = req.body.token || req.query.token || req.headers['authorization'];
+
+    if (token == 'undefined' || token == "" || token == null || token == 'null') {
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
+
+    }
+
+    let flag = jwtutil.verify(token);
+
+    if (!flag) {
+        return res.json({
+            success: false,
+            message: 'Failed to authenticate token.'
+        });
+     
+    }
+    next(); 
+});
+routes = require('./routes/user.route')(app);
 routes = require('./routes/inventory.route')(app);
 routes = require('./routes/sale.route')(app);
 routes = require('./routes/entry.route')(app);
 
-// before
-
-// routes = require('./routes/receipt.route')(app);
-// routes = require('./routes/product.route')(app);
-// routes = require('./routes/catalog.route')(app);
-// routes = require('./routes/user.route')(app);
-
 mongoose.disconnect();
-// mongoose.connect(configdb.url, { useMongoClient: true, reconnectTries: Number.MAX_VALUE }).then(x => {
-//   BUENFIN18  console.log('connection success');
-// });
 
 mongoose.connect(configdb.url, {
     useNewUrlParser: true,
@@ -46,7 +67,7 @@ mongoose.connect(configdb.url, {
     console.log('connection success');
 });
 
-app.listen(app.get('port'), function() {
+app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
 
