@@ -6,13 +6,12 @@ const mongoose = require('mongoose');
 const app = express();
 // const SuperSecret = require('./config/SuperSecret');
 const configdb = require('./config/mongoose');
-//const ctrlUser = require('./controllers/user.controller');
+const ctrlUser = require('./controllers/user.controller');
 // JWT
 // const fs = require('fs');
 // const jwt = require('jsonwebtoken');
 const jwtutil = require('./util/jwt.util');
 
-// const bcrypt = require('bcryptjs');
 
 app.set('port', (process.env.PORT || 5000));
 // app.set('superSecret', SuperSecret.NIP);
@@ -22,38 +21,38 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-//let tmpToken = '';
+let tmpToken = '';
 
-// app.get('/', function (req, res) {
-//     res.status(200).send({
-//         'message': 'Welcome!. to be continue'
-//     });
-// });
+app.get('/', function (req, res) {
+    res.status(200).send({
+        'message': 'Welcome!. to be continue'
+    });
+});
 
-// app.post('/login', ctrlUser.Login);
-// app.use('/api/*', function (req, res, next) {
+app.post('/login', ctrlUser.Login);
+app.use('/api/*', function (req, res, next) {
 
-//     var token = req.body.token || req.query.token || req.headers['authorization'];
+    var token = req.body.token || req.query.token || req.headers['authorization'];
 
-//     if (token == 'undefined' || token == "" || token == null || token == 'null') {
-//         return res.status(403).send({
-//             success: false,
-//             message: 'No token provided.'
-//         });
+    if (token == 'undefined' || token == "" || token == null || token == 'null') {
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
 
-//     }
+    }
 
-//     let flag = jwtutil.verify(token);
+    let flag = jwtutil.verify(token);
 
-//     if (!flag) {
-//         return res.json({
-//             success: false,
-//             message: 'Failed to authenticate token.'
-//         });
+    if (!flag) {
+        return res.json({
+            success: false,
+            message: 'Failed to authenticate token.'
+        });
      
-//     }
-//     next(); 
-// });
+    }
+    next(); 
+});
 
 routes = require('./routes/user.route')(app);
 routes = require('./routes/inventory.route')(app);
