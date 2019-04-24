@@ -11,5 +11,6 @@ module.exports = function (app) {
     app.get('/api/users/:id', ctrl.Get);
     app.get('/api/users', ctrl.GetAll);
     app.post('/api/users', ctrl.Create);
+    app.post('/api/users/upload', ctrl.Upload);
     
 }

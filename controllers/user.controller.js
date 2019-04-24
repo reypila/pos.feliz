@@ -11,8 +11,10 @@ const responseutil = require('../util/response.util');
 const jwt = require('jsonwebtoken');
 const SuperSecret = require('../config/SuperSecret');
 const jwtutil = require('../util/jwt.util');
-
 module.exports = {
+    Upload: function(req, res, next) {
+        
+    },
     Login: function (req, res, next) {
 
         if (!enums.CheckExist(req.body.email) && !enums.CheckExist(req.body.pwd)) {
