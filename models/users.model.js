@@ -25,6 +25,7 @@ module.exports = {
                         });
                     }
                     if (docs.length > 0) {
+                        console.dir(docs[0]);
                         resolve({
                             statusItem: enums.STATUS_ITEM.SUCCESS,
                             statusCode: enums.HTTP_STATUS_CODE.OK,

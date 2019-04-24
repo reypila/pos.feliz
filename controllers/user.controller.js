@@ -12,8 +12,13 @@ const jwt = require('jsonwebtoken');
 const SuperSecret = require('../config/SuperSecret');
 const jwtutil = require('../util/jwt.util');
 module.exports = {
-    Upload: function(req, res, next) {
+    Upload: function (req, res, next) {
+
+    },
+    LoginDecode: function (req, res, next) {
         
+        let tmpdecode = jwtutil.verify(req.headers.authorization);
+        responseutil.Send(res, enums.HTTP_STATUS_CODE.OK, tmpdecode, '', '', '');
     },
     Login: function (req, res, next) {
 
@@ -22,9 +27,34 @@ module.exports = {
             next();
         }
 
-        let objUser = { email: req.body.email, password: req.body.password };
+        let objUser = {
+            email: req.body.email,
+            password: req.body.password,
+            _id: "",
+            item_order: "",
+            status_item_id: "",
+            maker: "",
+            create_date: "",
+            modification_date: "",
+            name: "",
+            lastname: "",
+            lastname2: "",
+            alternatemail: "",
+            birthday: "",
+            rfc: "",
+            curp: "",
+            zipcode: "",
+            home_reference: "",
+            address: "",
+            apartment_number_int: "",
+            apartment_number_ext: "",
+            telephone_number: "",
+            telephone_number2: "",
+            rol_id: "",
+        };
 
         userModel.asyncLogin(objUser).then(resolve => {
+
             let sOptions = {
                 issuer: "Resource",
                 subject: "iam@user.me",
@@ -32,6 +62,30 @@ module.exports = {
             }
 
             if (resolve.statusItem == enums.STATUS_ITEM.SUCCESS) {
+                let tmpobjUser = JSON.parse(resolve.result);
+
+                objUser._id = tmpobjUser._id;
+                objUser.item_order = tmpobjUser.item_order;
+                objUser.status_item_id = tmpobjUser.status_item_id;
+                objUser.maker = tmpobjUser.maker;
+                objUser.create_date = tmpobjUser.create_date;
+                objUser.modification_date = tmpobjUser.modification_date;
+                objUser.name = tmpobjUser.name;
+                objUser.lastname = tmpobjUser.lastname;
+                objUser.lastname2 = tmpobjUser.lastname2;
+                objUser.alternatemail = tmpobjUser.alternatemail;
+                objUser.birthday = tmpobjUser.birthday;
+                objUser.rfc = tmpobjUser.rfc;
+                objUser.curp = tmpobjUser.curp;
+                objUser.zipcode = tmpobjUser.zipcode;
+                objUser.home_reference = tmpobjUser.home_reference;
+                objUser.address = tmpobjUser.address;
+                objUser.apartment_number_int = tmpobjUser.apartment_number_int;
+                objUser.apartment_number_ext = tmpobjUser.apartment_number_ext;
+                objUser.telephone_number = tmpobjUser.telephone_number;
+                objUser.telephone_number2 = tmpobjUser.telephone_number2;
+                objUser.rol_id = tmpobjUser.rol_id;
+
                 let sign = jwtutil.sign(objUser, sOptions);
                 responseutil.Send(res, resolve.statusCode, sign, resolve.message, resolve.href, resolve.function);
             } else {
