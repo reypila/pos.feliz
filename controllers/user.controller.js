@@ -16,9 +16,10 @@ module.exports = {
 
     },
     LoginDecode: function (req, res, next) {
-        
+
         let tmpdecode = jwtutil.verify(req.headers.authorization);
-        responseutil.Send(res, enums.HTTP_STATUS_CODE.OK, tmpdecode, '', '', '');
+        // JSON.stringify()
+        responseutil.Send(res, enums.HTTP_STATUS_CODE.OK, JSON.stringify(tmpdecode), '', '', '');
     },
     Login: function (req, res, next) {
 
