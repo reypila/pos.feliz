@@ -35,7 +35,6 @@ module.exports = {
 
                 category.save(function(err) {
                     if (err) reject(-100);
-                    console.dir(category);
                     resolve(category);
                 });
             } catch (error) {
@@ -54,10 +53,8 @@ module.exports = {
                     if (err) return err;
 
                     if (res == null) {
-                        console.log('null = 0');
                         resolve(0);
                     } else {
-                        console.log(' = 1');
                         let result = (res._doc) ? 1 : 0;
                         resolve(result);
                     }
@@ -165,7 +162,6 @@ module.exports = {
                 }).sort({
                     row: -1
                 }).limit(1);
-                console.dir(test);
 
 
             } catch (error) {

@@ -121,7 +121,6 @@ module.exports = {
 							function: ''
 						});
 					}
-					// console.dir(docs);
 					docs.length >= 1 ? resolve({
 						statusItem: enums.STATUS_ITEM.EXISTE,
 						statusCode: enums.HTTP_STATUS_CODE.OK,

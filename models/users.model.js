@@ -47,7 +47,6 @@ module.exports = {
 
                 });
             } catch (error) {
-                console.dir(error);
             }
         });
         return promesa;
@@ -161,10 +160,8 @@ module.exports = {
         return promesa;
     },
     asyncGet: function (objuser) {
-        console.dir(objuser);
         let promesa = new Promise(function (resolve, reject) {
             try {
-                //   console.dir(objuser);
                 let query = userModel.find(objuser);
 
                 query.exec(function (error, docs) {
@@ -179,10 +176,7 @@ module.exports = {
                             function: ''
                         });
                     }
-
-                    // console.log('*********************************************************')
-                    // console.dir(docs);
-
+ 
                     resolve({
                         statusItem: enums.STATUS_ITEM.SUCCESS,
                         statusCode: enums.HTTP_STATUS_CODE.OK,
@@ -256,10 +250,8 @@ module.exports = {
                     if (err) return err;
 
                     if (res == null) {
-                        console.log('null = 0');
                         resolve(0);
                     } else {
-                        // console.log(' = 1');
                         const result = (res._doc) ? 1 : 0;
                         resolve(result);
                     }

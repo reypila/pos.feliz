@@ -160,10 +160,8 @@ module.exports = {
     },
     asyncDataAdd: function(requestObject) {
         const promesa = new Promise(function(resolve, reject) {
-            // body...
             try {
-                // console.dir(requestObject);
-                // const datetmp = enums.DateTimeNowToMilliSeconds();
+             
                 const datetmp = enums.DateTimeNowToMilliSeconds();
 
                 let rowitem = rowsEntity({
@@ -228,9 +226,6 @@ module.exports = {
                         // }, {
                         //     new: true
                         // }, function(error, res) {
-                        //     // console.dir(error)
-                        //     // console.log('separate');
-                        //     // console.dir(res);
                         //     if (error) {
                         //         reject({
                         //             statusCode: enums.STATUS_ITEM.ERROR,
@@ -317,7 +312,6 @@ module.exports = {
                     if (!enums.CheckExist(res._doc)) {
                         resolve(enums.STATUS_ITEM.INCIDENCIA);
                     } else {
-                        //console.dir(res);
                         resolve({
                             statusCode: enums.STATUS_ITEM.OKNOCONTENT,
                             message: JSON.stringify(res)
@@ -351,7 +345,6 @@ module.exports = {
                         });
                     }
 
-                    // console.dir(docs);
                     docs.length >= 1 ? resolve(docs) : resolve(enums.STATUS_ITEM.NOTFOUND);
                 });
             } catch (error) {
@@ -371,8 +364,6 @@ module.exports = {
             try {
                 const query = catalogEntity.find({});
                 query.exec(function(error, docs) {
-                    console.dir(docs);
-
                     if (error) {
                         reject({
                             statusItem: enums.STATUS_ITEM.INCIDENCIA,
@@ -485,7 +476,6 @@ module.exports = {
                                         function: ''
                                     });
                                 } else {
-                                    // console.dir(catalog);
                                     resolve({
                                         statusItem: enums.STATUS_ITEM.SUCCESS,
                                         statusCode: enums.HTTP_STATUS_CODE.OK,

@@ -58,7 +58,6 @@ module.exports = {
       maker: req.body.maker
     };
     model.asyncDelete(objCatalogDetails).then(x => {
-      console.dir(x);
       (x == 0) ? responseutil.Send(res, 400, '', 'No se logro borrar', '', '') : responseutil.Send(res, 200, '', 'Borrado con exito', '', '');
       next();
     });
@@ -72,7 +71,6 @@ module.exports = {
     };
 
     model.asyncUpdate(objCatalogDetails).then(x => {
-      console.dir(x);
       (x == 0) ? responseutil.Send(res, 400, '', 'No se logro modificar', '', '') : responseutil.Send(res, 200, '', 'Modificado con exito', '', '');
       next();
     });

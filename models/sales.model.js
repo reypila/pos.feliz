@@ -319,7 +319,7 @@ module.exports = {
                                             'items_stock': tmp_items_stock
                                         }
 
-                                         inventoryModel.asyncPatch(objectInventory).done(x=> console.dir(x));
+                                         inventoryModel.asyncPatch(objectInventory).done(x=> {});
 
                                         resolve({
                                             statusItem: enums.STATUS_ITEM.SUCCESS,

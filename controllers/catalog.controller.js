@@ -167,7 +167,6 @@ module.exports = {
         };
 
         model.asyncUpdate(objCatalogDetails).then(x => {
-            console.dir(x);
             (x == 0) ? responseutil.Send(res, 400, '', 'No se logro modificar', '', ''): responseutil.Send(res, 200, '', 'Modificado con exito', '', '');
             next();
         });
@@ -212,7 +211,6 @@ module.exports = {
             if (result.statusCode == enums.STATUS_ITEM.ERROR) {
                 responseutil.Send(res, enums.STATUS_ITEM.BADREQUEST, '', x.message, '', '', '');
             } else {
-                // console.dir(result);
                 responseutil.Send(res, enums.STATUS_ITEM.OK, result, '', '');
             }
             next();

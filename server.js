@@ -11,8 +11,7 @@ const ctrlUser = require('./controllers/user.controller');
 // const fs = require('fs');
 // const jwt = require('jsonwebtoken');
 const jwtutil = require('./util/jwt.util');
-// master
-
+// alpha
 app.set('port', (process.env.PORT || 5000));
 // app.set('superSecret', SuperSecret.NIP);
 app.use(cors());
@@ -72,7 +71,8 @@ mongoose.connect(configdb.url, {
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
-
+// #20190424.1942
+// Se actualiza codigo para hacer un decode  acorde al token que se obtiene del loggin
 // #20181122.16.42
 //  vamos analizar que estamos haciendo donde estamos y hacia donde vamos
 // acorde a la apertura del local de video juegos estimada para 2018.12.03 se necesita

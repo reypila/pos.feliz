@@ -6,7 +6,6 @@ var Dropbox = require('dropbox').Dropbox;
 const DropboxConfig = require('../config/DropboxConfig');
 
 const dbxTest = function() {
-    console.log('start');
 
     var dbx = new Dropbox({
         accessToken: DropboxConfig.accessToken,
@@ -17,10 +16,8 @@ const dbxTest = function() {
             path: '/assets'
         })
         .then(function(response) {
-            console.log(response);
         })
         .catch(function(error) {
-            console.log(error);
         });
 
 }
