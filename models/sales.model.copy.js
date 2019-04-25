@@ -103,7 +103,6 @@ module.exports = {
                                 function: ''
                             });
                         } else {
-                            //console.dir(res);
                             // resolve({
                             //     statusCode: enums.STATUS_ITEM.OKNOCONTENT,
                             //     message: JSON.stringify(res)

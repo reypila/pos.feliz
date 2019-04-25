@@ -291,7 +291,6 @@ module.exports = {
                                         function: ''
                                     });
                                 } else {
-                                    // console.dir(objectEntity);
                                     resolve({
                                         statusItem: enums.STATUS_ITEM.SUCCESS,
                                         statusCode: enums.HTTP_STATUS_CODE.OK,
