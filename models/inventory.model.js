@@ -171,7 +171,7 @@ module.exports = {
 
         return promesa;
     },
-    asyncGetAll: function () {
+    asyncGetAll: function (objectInventory) {
         let promesa = new Promise(function (resolve, reject) {
             try {
                 const query = inventoryEntity.find({});
