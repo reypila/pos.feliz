@@ -244,10 +244,9 @@ module.exports = {
                             function: ''
                         });
                     } else {
-
                         // get max value id_table
                         const selectItemMAX = inventoryEntity.findOne({
-                            // status_item: true
+                        // status_item: true
                         }).sort('-id_table');
 
                         selectItemMAX.exec(function (error, itemMAX) {
@@ -274,6 +273,7 @@ module.exports = {
                                 product_code: objectInventory.product_code,
                                 barcode: objectInventory.barcode,
                                 description: objectInventory.description,
+                                imgurl: objectInventory.imgurl,
                                 items_current: objectInventory.items_current,
                                 items_entries: objectInventory.items_entries,
                                 items_outgoings: objectInventory.items_outgoings,

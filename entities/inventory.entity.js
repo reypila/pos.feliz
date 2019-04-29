@@ -29,6 +29,10 @@ let object = new Schema({
         type: String,
         required: true
     },
+    imgurl: {
+        type: String,
+        required: true
+    },
     items_current: {
         type: Number
     },
