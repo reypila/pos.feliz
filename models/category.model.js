@@ -4,8 +4,8 @@ const responseutil = require('../util/response.util')
 const Promise = require("promise");
 
 module.exports = {
-    asyncCreate: function (objCatalogDetails) {
-        return new Promise(function (resolve, reject) {
+    asyncCreate: function(objCatalogDetails) {
+        return new Promise(function(resolve, reject) {
             try {
                 let category = new categorymodel({
                     id_item: enums.CATALOGS.CATEGORYS,
@@ -33,9 +33,8 @@ module.exports = {
                     field15: ""
                 });
 
-                category.save(function (err) {
+                category.save(function(err) {
                     if (err) reject(-100);
-                    console.dir(category);
                     resolve(category);
                 });
             } catch (error) {
@@ -44,20 +43,18 @@ module.exports = {
         });
 
     },
-    asyncCheckExist: function (objCatalogDetails) {
-        return new Promise(function (resolve, reject) {
+    asyncCheckExist: function(objCatalogDetails) {
+        return new Promise(function(resolve, reject) {
             try {
                 let query = categorymodel.findOne({
                     'id_item': enums.CATALOGS.CATEGORYS,
                     'field0': objCatalogDetails.name
-                }, 'field0 id', function (err, res) {
+                }, 'field0 id', function(err, res) {
                     if (err) return err;
 
                     if (res == null) {
-                        console.log('null = 0');
                         resolve(0);
                     } else {
-                        console.log(' = 1');
                         let result = (res._doc) ? 1 : 0;
                         resolve(result);
                     }
@@ -65,17 +62,16 @@ module.exports = {
             } catch (ex) {
                 reject(ex);
             }
-        }
-        );
+        });
     },
-    asyncFindById: function (objCatalogDetails) {
-        return new Promise(function (resolve, reject) {
+    asyncFindById: function(objCatalogDetails) {
+        return new Promise(function(resolve, reject) {
             try {
                 let query = categorymodel.findOne({
                     'id_item': enums.CATALOGS.CATEGORYS,
                     'row': objCatalogDetails.uid
                     // }, 'field0 id', function (err, res) {
-                }, ' _id id_item status_item maker create_date modification_date row field0 field1 field2 field3 field4 field5 field6 field7 field8 field9 field10 field11 field12 field13 field14 field15', function (err, res) {
+                }, ' _id id_item status_item maker create_date modification_date row field0 field1 field2 field3 field4 field5 field6 field7 field8 field9 field10 field11 field12 field13 field14 field15', function(err, res) {
                     if (err) return err;
                     if (res == null) {
                         throw Error(res);
@@ -89,25 +85,27 @@ module.exports = {
             }
         });
     },
-    asyncDelete: function (objCatalogDetails) {
-        return new Promise(function (resolve, reject) {
+    asyncDelete: function(objCatalogDetails) {
+        return new Promise(function(resolve, reject) {
             try {
                 let query = categorymodel.findOneAndUpdate({
                     'id_item': enums.CATALOGS.CATEGORYS,
                     '_id': objCatalogDetails._id
                 }, {
-                        'status_item': enums.STATUS_ITEM.DELETE,
-                        'maker': objCatalogDetails.maker,
-                        'modification_date': new Date()
-                    }, function (err, res) {
-                        if (err) return err;
-                        if (res == null) {
-                            throw Error(res);
-                            resolve(0);
-                        } else {
-                            resolve(res._doc);
-                        }
-                    });
+                    'status_item': enums.STATUS_ITEM.DELETE,
+                    'maker': objCatalogDetails.maker,
+                    'modification_date': new Date()
+                }, {
+                    new: true
+                }, function(err, res) {
+                    if (err) return err;
+                    if (res == null) {
+                        throw Error(res);
+                        resolve(0);
+                    } else {
+                        resolve(res._doc);
+                    }
+                });
             } catch (ex) {
                 reject(ex);
             }
@@ -119,33 +117,35 @@ module.exports = {
       field0: req.body.name,
       status_item: req.body.status_item
     */
-    asyncUpdate: function (objCatalogDetails) {
-        return new Promise(function (resolve, reject) {
+    asyncUpdate: function(objCatalogDetails) {
+        return new Promise(function(resolve, reject) {
             try {
                 let query = categorymodel.findOneAndUpdate({
-                  //  'id_item': enums.CATALOGS.CATEGORYS,
+                    //  'id_item': enums.CATALOGS.CATEGORYS,
                     '_id': objCatalogDetails._id
                 }, {
-                        'field0': objCatalogDetails.name,
-                        'status_item': objCatalogDetails.status_item,
-                        'maker': objCatalogDetails.maker,
-                        'modification_date': new Date()
-                    }, function (err, res) {
-                        if (err) return err;
-                        if (res == null) {
-                            throw Error(res);
-                            resolve(0);
-                        } else {
-                            resolve(res._doc);
-                        }
-                    });
+                    'field0': objCatalogDetails.name,
+                    'status_item': objCatalogDetails.status_item,
+                    'maker': objCatalogDetails.maker,
+                    'modification_date': new Date()
+                }, {
+                    new: true
+                }, function(err, res) {
+                    if (err) return err;
+                    if (res == null) {
+                        throw Error(res);
+                        resolve(0);
+                    } else {
+                        resolve(res._doc);
+                    }
+                });
             } catch (ex) {
                 reject(ex);
             }
         });
     },
-    asyncNext: function () {
-        return new Promise(function (resolve, reject) {
+    asyncNext: function() {
+        return new Promise(function(resolve, reject) {
             try {
                 // categorymodel.findOne({
                 //     'id_item': enums.CATALOGS.CATEGORYS
@@ -157,8 +157,11 @@ module.exports = {
                 //         else
                 //             resolve(parseInt(result._doc.row) + 1);
                 //     });
-                let test = categorymodel.find({ 'id_item': enums.CATALOGS.CATEGORYS }).sort({ row: -1 }).limit(1);
-                console.dir(test);
+                let test = categorymodel.find({
+                    'id_item': enums.CATALOGS.CATEGORYS
+                }).sort({
+                    row: -1
+                }).limit(1);
 
 
             } catch (error) {
