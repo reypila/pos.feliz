@@ -109,8 +109,8 @@ module.exports = {
     GetAll: function (req, res, next) {
 
         // 
-        let objectInventory = { };
-
+        let objectInventory = {};
++
         if (!enums.CheckExist(req.query.filter)) {
             objectInventory.STATUS_ITEM = req.query.filter;
         }
